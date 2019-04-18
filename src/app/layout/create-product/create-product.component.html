@@ -1,0 +1,65 @@
+<div class="container">
+
+
+  <form style="margin-top:20px;" class="center justify-content-center">
+    <div class="head-form col-12">{{title}}</div>
+    <div class="form-group row col-12  float-left">
+      <label for="Company" class="col-sm-2 col-form-label"><b>Company</b>*</label>
+      <div class="col-sm-9 col-form-label">
+        {{company}}
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="itemCode" class="col-sm-2 col-form-label"><b>Item Code*</b> </label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="itemCode" [(ngModel)]="itemCode" id="inputPassword" placeholder=""
+          required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemStatus" class="col-sm-2 col-form-label"><b>Item Status*</b> </label>
+      <div class="col-sm-5">
+        <select class="form-control" name="itemStatus" ng-model="itemStatus" (change)="ItemStatusOnChange($event.target.value)">
+          <option value="active">Active</option>
+          <option value="inactive">InActive</option>
+        </select>
+       
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Item Name*</b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="itemName" name="itemName" class="form-control" id="inputPassword" placeholder=""
+          required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemPrice" class="col-sm-2 col-form-label"><b>Item Price*</b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="itemPrice" name="itemPrice" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+        <label for="itemName" class="col-sm-2 col-form-label"><b>Quantity*</b></label>
+        <div class="col-sm-5">
+          <input type="text" [(ngModel)]="quantity" name="quantity" class="form-control" id="quantity" placeholder=""
+            required>
+        </div>
+      </div>
+    <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin'">
+      <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User*</b> </label>
+      <div class="col-sm-5">
+        <select class="form-control" name="user" [(ngModel)]="userRef"(change)="productOfUser($event.target.value)">
+          <option *ngFor="let item of productofUser" [value]="item.username">{{item.username}}</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-1 float-right">Save</button>
+    <button type="button" (click)="back()" class="margin-top-mobile btn btn-danger bt-style col-sm-1 float-right">Back</button>
+
+  </form>
+</div>

@@ -1,0 +1,129 @@
+<div class="container">
+  <mat-card>
+    <select class="form-control col-12 col-md-5" name="ReportType" [(ngModel)]="reportType"
+      (change)="ReportTypeSelect($event.target.value)">
+      <option value="1">Daily Sale Report</option>
+      <option value="2">Daily Stock Report</option>
+    </select>
+    <div>
+
+
+      <mat-form-field class="calendar">
+        <input matInput placeholder="Date From"  [matDatepicker]="dateFrom" [(ngModel)]="dateFromData" readonly >
+        <mat-datepicker-toggle matSuffix [for]="dateFrom">
+          <mat-datepicker #dateFrom ngDefaultControl ></mat-datepicker>
+        </mat-datepicker-toggle>
+      </mat-form-field>
+
+
+      <mat-form-field class="calendar">
+        <input matInput placeholder="Date To"  [matDatepicker]="dateTo" [(ngModel)]="dateToData"  readonly>
+        <mat-datepicker-toggle matSuffix [for]="dateTo">
+          <mat-datepicker #dateTo ></mat-datepicker>
+        </mat-datepicker-toggle>
+      </mat-form-field>
+
+
+
+      <select *ngIf="reportType == '1'" class="form-control col-12 col-md-5" name="view" [(ngModel)]="view"
+        (change)="ViewSelect($event.target.value)">
+        <option value="1">Detail</option>
+        <option value="2">Summary</option>
+      </select>
+    </div>
+
+    <div class="margin-top col-12">
+      <button type="button" (click)="Search()" class="btn btn-success bt-style col-sm-2">Search</button>
+      <button type="button" (click)="Reset()" class="margin-top-mobile btn btn-danger bt-style col-sm-2">Reset</button>
+
+    </div>
+
+  </mat-card>
+
+  <div style="margin-top:15px;"  *ngIf="isSearchStock">
+      <div>{{title}}</div>
+      <div (click)="Print()">print</div>
+      <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Shop/Company</th>
+              <th scope="col">itemName</th>
+              <th scope="col">Total Quantity</th>
+              <th scope="col">Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of result?.ResponseData.result;let i = index">
+              <th scope="row">{{i+1}}</th>
+              <td>{{item.productInUser}}</td>
+              <td>{{item.itemName}}</td>
+              <td>{{item.quantityItem | number}}</td>
+              <td>{{item.totalAmount |  number:'.2-2'}}</td>
+            </tr>
+            
+          </tbody>
+        </table>
+  </div>
+
+  <div style="margin-top:15px;" class="table-responsive" *ngIf="isSearchSale && view == '1'">
+      <div>{{title}}</div>
+    <!-- <div (click)="Print()">print</div> -->
+      <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Shop</th>
+              <th scope="col">date</th>
+              <th scope="col">InvoiceNo</th>
+              <th scope="col">COD</th>
+              <th scope="col">Customer Name</th>
+              <th scope="col">Customer Mobile</th>
+              <th scope="col">Invoice Amount</th>
+              <th scope="col">Submit By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of result?.ResponseData.data;let i = index">
+              <th scope="row">{{i+1}}</th>
+              <td>{{item.user}}</td>
+              <td>{{item.date}}</td>
+              <td>{{item.orderNo}}</td>
+              <td>{{item.cod == 1 ? "YES":"NO"}}</td>
+              <td>{{item.customerName}}</td>
+              <td>{{item.customerTel}}</td>
+              <td>{{item.grandTotal |  number:'.2-2'}}</td>
+              <td>{{item.createBy}}</td>
+            </tr>
+            
+          </tbody>
+        </table>
+  </div>
+  <div class="table-responsive" style="margin-top:15px;" *ngIf="isSearchSale && view == '2'">
+    <div>{{title}}</div>
+    
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Shop/Company</th>
+            <th scope="col">Keep Stock</th>
+            <th scope="col">Total Invoice</th>
+            <th scope="col">Total Amount</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of result?.ResponseData.data;let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{item.user}}</td>
+            <td>YES</td>
+            <td>{{result?.ResponseData.data.length}}</td>
+            <td>{{totalAmount|  number:'.2-2'}}</td>
+       
+          </tr>
+          
+        </tbody>
+      </table>
+</div>
+</div>

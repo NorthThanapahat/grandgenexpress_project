@@ -1,0 +1,38 @@
+<div class="login-page container" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-6 col-12">
+            <div>
+                <div class="">
+                    <img class="img-logo" src="../../assets/images/logo-web.png" alt="">
+                </div>
+                <div class="title-login"><b>GrandGen Express</b></div>
+            </div>
+
+            <form role="form">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input type="text" [ngClass]="{'error-input': errorItem.username}" name="username"
+                            [(ngModel)]="username" class="form-control input-underline input-lg text-white" id=""
+                            placeholder="{{ 'User Id' | translate }}" required>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input ngcla type="password" [ngClass]="{'error-input': errorItem.password}" name="password"
+                            [(ngModel)]="password" class="form-control input-underline input-lg text-white" id=""
+                            placeholder="{{ 'Password' | translate }}" (keyup.enter)="onLoggedin()">
+
+                    </div>
+
+                    <div class="invalid-feedback d-block" *ngIf="error || errorItem.username || errorItem.password"
+                        required>
+                        {{message}}
+                    </div>
+                </div>
+
+                <a class="btn rounded-btn" (click)="onLoggedin()">{{ 'Log in' | translate }}</a>
+                &nbsp;
+            </form>
+        </div>
+    </div>
+</div>

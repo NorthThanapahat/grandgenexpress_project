@@ -1,0 +1,167 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+    <div class="list-group">
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+        <div class="nested-menu"
+            *ngIf="userDetail?.ResponseData.userRole == 'admin' || userDetail?.ResponseData.userRole == 'shop'">
+            <a class="list-group-item" (click)="addExpandClass('company')">
+                <i class="fa fa-users"></i>&nbsp;
+                <span>{{ 'Company Module' | translate }}</span>&nbsp;
+                <i class="fa fa-angle-{{showMenu === 'company'?'up':'down'}}"></i>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'company'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/manage-user'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Manage Company / User' | translate }}</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+        </div>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('Transaction')">
+                <i class="fa fa-retweet"></i>&nbsp;
+                <span>{{ 'Transaction' | translate }}</span>&nbsp;
+                <i class="fa fa-angle-{{showMenu === 'Transaction'?'up':'down'}}"></i>
+            </a>
+
+
+            <li class="nested" [class.expand]="showMenu === 'Transaction'">
+                <ul class="submenu">
+
+                    <li>
+                        <a [routerLink]="['/create-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Create Invoice' | translate }}</span>
+                        </a>
+                    </li>
+                    <li  *ngIf="(userDetail?.ResponseData.userRole == 'admin')">
+                        <a [routerLink]="['/manage-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Manage Invoice' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/inquiry-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Invoice Status Enquiry' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu"
+            *ngIf="(userDetail?.ResponseData.userRole == 'admin' || userDetail?.ResponseData.userRole == 'shop') && hide">
+            <a class="list-group-item" (click)="addExpandClass('LedgerAccount')">
+                <i class="fa fa-usd"></i>&nbsp;
+                <span>{{ 'Ledger Account' | translate }}</span>&nbsp;
+                <i class="fa fa-angle-{{showMenu === 'LedgerAccount'?'up':'down'}}"></i>
+            </a>
+
+
+            <li class="nested" [class.expand]="showMenu === 'LedgerAccount'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/create-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Ledger Account Enquiry' | translate }}</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu"
+            *ngIf="(userDetail?.ResponseData.userRole == 'admin' || userDetail?.ResponseData.userRole == 'shop')">
+            <a class="list-group-item" (click)="addExpandClass('Report')">
+                <i class="fa fa-file-text"></i>&nbsp;
+                <span>{{ 'Report' | translate }}</span>&nbsp;
+                <i class="fa fa-angle-{{showMenu === 'Report'?'up':'down'}}"></i>
+            </a>
+
+
+            <li class="nested" [class.expand]="showMenu === 'Report'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/report'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Report' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div class="nested-menu"
+            *ngIf="userDetail?.ResponseData.userRole == 'admin' || userDetail?.ResponseData.userRole == 'shop'">
+            <a class="list-group-item" (click)="addExpandClass('Stock')">
+                <i class="fa fa-industry"></i>&nbsp;
+                <span>{{ 'Stock' | translate }}</span>&nbsp;
+                <i class="fa fa-angle-{{showMenu === 'Stock'?'up':'down'}}"></i>
+            </a>
+
+
+            <li class="nested" [class.expand]="showMenu === 'Stock'">
+                <ul class="submenu">
+                    <li *ngIf="hide">
+                        <a [routerLink]="['/create-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Closing Stock Report' | translate }}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="hide">
+                        <a [routerLink]="['/create-invoice'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Stock Ledger Report' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/product'] " [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-monument"></i>&nbsp;
+                            <span class="item-submenu">{{ 'Manage Product' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <a routerLink="/login" (click)="onLoggedout()" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-sign-out"></i>&nbsp;
+            <span>{{ 'Logout' | translate }}</span>
+        </a>
+
+
+        <div class="header-fields">
+
+            <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('profile')">
+                    <span><i class="fa fa-user"></i>&nbsp; {{userDetail?.ResponseData.Firstname}}
+                        {{userDetail?.ResponseData.Lastname}}</span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'profile'">
+                    <ul class="submenu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <span><i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/login']" (click)="onLoggedout()">
+                                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+    <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+        <i class="fa fa-fw fa-angle-double-{{collapsed?'right':'left'}}"></i>&nbsp;
+
+    </div>
+</nav>

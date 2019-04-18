@@ -1,0 +1,252 @@
+<div class="container">
+  <form style="margin-top:20px;" class="center">
+    <div class="head-form col-12">Create New</div>
+
+    <div class="form-group row col-12">
+      <label for="inputPassword" class="col-form-label">Mobile No : </label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="mobile" [ngClass]="{'error-input': error}" [(ngModel)]="mobile" id="mobile" placeholder="" required>
+      </div>
+      <button type="button" (click)="next()" class="margin-top-mobile btn btn-success bt-style col-sm-1 float-left">Next</button>
+    </div>
+
+  </form>
+
+</div>
+<div class="container">
+
+  <form *ngIf="isCustomerInfoEmpty" style="margin-top:20px;" class="center">
+    <div class="head-form col-12">Invoice Information - New Invoice</div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Date*</b></label>
+      <div class="col-sm-2">
+        <input type="text" [(ngModel)]="date" name="date" class="form-control" id="date" placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemStatus" class="col-sm-2 col-form-label"><b>COD*</b> </label>
+      <div class="col-sm-6">
+        <select class="form-control" name="COD" [(ngModel)]="cod" (change)="CODChange($event.target.value)">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Ref No. / CB No.</b></label>
+      <div class="col-sm-6">
+        <input type="text" [(ngModel)]="customerRefNo" name="customerRefNo" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer Name *</b></label>
+      <div class="col-sm-6">
+        <input type="text" [(ngModel)]="customerName" name="customerName" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Mobile No. *</b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="customerMobile" name="customerMobile" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer E-mail</b></label>
+      <div class="col-sm-6">
+        <input type="text" [(ngModel)]="customerEmail" name="customerEmail" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Address *</b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="customerAddress" name="customerAddress" class="form-control" id="inputPassword"
+          placeholder="" required>
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Remark</b></label>
+      <div class="col-sm-6">
+        <textarea type="text" [(ngModel)]="Remark" name="Remark" class="form-control" id="inputPassword" placeholder=""
+          required></textarea>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="container" *ngIf="isCustomerInfoEmpty ">
+  <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin'">
+    <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User*</b> </label>
+    <div class="col-sm-6">
+      <select class="form-control" name="user" [(ngModel)]="userRef" (change)="ProductOfUser($event.target.value)">
+        <option *ngFor="let item of productofUser" [value]="item.username">{{item.username}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="container table-responsive" *ngIf="isCustomerInfoEmpty ">
+  <div class="head-form col-12">Order Details</div>
+  <table style="margin-top:10px;" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td class="text-center">
+          <div>
+            Item Code
+          
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Item Name
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Unit Price (THB)
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Quantity
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Total Price
+          </div>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of product?.ResponseData; let i = index; ">
+        <td class="text-center">{{item.itemCode}}</td>
+        <td class="text-center">{{item.itemName}}</td>
+        <td class="text-center">{{item.itemPrice}}</td>
+        <td class="text-center"><input class="text-center" type=number [(ngModel)]="item.quantity"
+            (keyup)="QuantityOnChange($event.target.value,item.itemPrice,i)"></td>
+        <td class="text-center">{{item.price}}</td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Order Charges (THB)</td>
+        <td class="text-center">{{totalPrice}}</td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Additional Charges ( +/- ) (THB)</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="addCharges" (change)="Charges($event.target.value)">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Discount ( - ) (THB)</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="discount" (change)="Discount($event.target.value)">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Quantity</td>
+        <td class="text-center">
+          {{totalQuantity}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Grand Total (THB)</td>
+        <td class="text-center">
+          {{Total}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="container  table-responsive" *ngIf="isCustomerInfoEmpty">
+  <div class="head-form col-12">Payment Method</div>
+  <table style="margin-top:10px;" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td class="text-center">
+          <div>
+            Payment Type
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Payment Ref No.
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Amount
+          </div>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-center">
+          <select class="form-control" name="paymentType" [(ngModel)]="paymentType">
+            <option>Please Select</option>
+            <option>BANK TRANSFER</option>
+            <option>CASH</option>
+            <option>CONSIGNMENT</option>
+            <option>CREDIT CARD</option>
+            <option>COD</option>
+            <option>CHEQUE</option>
+          </select>
+        </td>
+        <td class="text-center">
+          <input #imageInput type="file" accept="image/*" (change)="processFile($event)">
+        </td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="amount" (change)="Amount($event.target.value)">
+        </td>
+      </tr>
+      <tr>
+          <td class="text-center"></td>
+          <td class="text-right">Total Order</td>
+          <td class="text-center">
+              {{Total}}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-center"></td>
+          <td class="text-right">Paid Amount</td>
+          <td class="text-center">
+            {{amount}}
+          </td>
+        </tr>
+        <tr>
+            <td class="text-center"></td>
+            <td class="text-right">Different</td>
+            <td class="text-center">
+             {{different}}
+            </td>
+          </tr>
+    </tbody>
+  </table>
+  <img class="col-12" src="{{image}}" alt="">
+</div>
+<div class="margin-top col-12 text-center" *ngIf="isCustomerInfoEmpty">
+  <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-1">Save</button>
+</div>

@@ -1,0 +1,39 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'User Company'" [icon]="'fa-wrench'"></app-page-header>
+ 
+  <div class="container">
+    <div class="row">
+      <button style="margin:10px;" type="button" (click)="CreateUser()" class="btn btn-success">Create User</button>
+    </div>
+    <div class="row table-responsive">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">UserId</th>
+            <th scope="col">Username</th>
+            <th *ngIf="userDetail.ResponseData.userRole == 'admin'" scope="col">Create By</th>
+            <th scope="col">Access Level</th>
+            <th scope="col">Status</th>
+            <th scope="col">Password</th>
+            <th *ngIf="userDetail.ResponseData.userRole == 'admin'" scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of userManage?.ResponseData ; let i = index;">
+            <th scope="row">{{i+1}}</th>
+            <td>{{item.username}}</td>
+            <td>{{item.Firstname}}</td>
+            <td *ngIf="userDetail.ResponseData.userRole == 'admin'">{{item.userRef}}</td>
+            <td>{{item.userRole}}</td>
+            <td>active</td>
+            <td><div class="btn-link" (click)="ResetPassword(item.username)">Reset Password</div></td>
+            <td *ngIf="userDetail.ResponseData.userRole == 'admin'"><div class="btn-link" (click)="Delete(item.username)">Delete</div></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>

@@ -1,0 +1,47 @@
+<div>
+  <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin'">
+    <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User*</b> </label>
+    <div class="col-sm-5">
+      <select class="form-control" name="user" [(ngModel)]="userRef" (change)="UserOption($event.target.value)">
+        <option *ngFor="let item of productofUser" [value]="item.username">{{item.username}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row table-responsive">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr class="col">
+            <th scope="col">#</th>
+            <th scope="col">Invoice No.</th>
+            <th scope="col">Receipt Info</th>
+            <th scope="col">sale date</th>
+            <th scope="col">Submitted By</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of inquiryOrder?.ResponseData.data ; let i = index;">
+            <th scope="row">{{i+1}}</th>
+            <td>{{item.orderNo}}</td>
+            <td style="width:30%;">{{item.customerName}} <br>{{item.customerAddress}}</td>
+            <td>{{item.paymentDate}}</td>
+            <td>{{item.createBy}}</td>
+            <td>
+              <select class="form-control min-width-20" name="user" [(ngModel)]="item.status"
+                (change)="StatusInvoice($event.target.value,item,i)">
+                <option>Waiting for shipment</option>
+                <option>Shipped</option>
+                <option>Delivered</option>
+                <option>Paid</option>
+                <option>Cancelled order</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="margin-top col-12 text-right">
+        <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-1">Save</button>
+      </div>
+  </div>

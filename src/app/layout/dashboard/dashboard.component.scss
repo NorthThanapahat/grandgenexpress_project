@@ -1,0 +1,45 @@
+.detail-group{
+    font-size: 18px;
+    margin: 20px;
+    background:#055A79;
+    color: white;
+    padding:20px;
+    border-radius: 10px;
+}
+.detail-item{
+    font-size:25px;
+}
+.text-color-theme{
+    color:#055A79;
+}
+.text-title-item{
+    margin-left: 15px; 
+    font-size: 25px;
+}
+@media only screen and (max-width: 600px) {
+    /* For tablets: */
+    
+  }
+  @media only screen and (max-width: 768px) {
+    /* For desktop: */
+    .detail-group{
+        margin: 20px;
+    }
+    .text-title-item{
+        margin-left: 15px; 
+        font-size: 25px;
+    }
+  }
+  @media only screen and (max-width:360px) {
+    /* For mobile: */
+    .detail-group{
+        margin: 10px;
+        font-size: 15px;
+    }
+    .detail-item{
+        font-size:15px;
+    }
+    .text-title-item{
+        font-size:18px;
+    }
+  }

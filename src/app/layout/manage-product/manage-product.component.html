@@ -1,0 +1,89 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Product Management'" [icon]="'fa-wrench'"></app-page-header>
+
+  <div class="container table-responsive">
+      <button *ngIf="userDetail.ResponseData.userRole == 'admin'" (click)="createNewProduct()" type="button" class="btn btn-primary">Create New Product</button>
+    <table style="margin-top:10px;" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <td class="text-center">
+            <div (click)="sortType = 'itemCode'; sortReverse = !sortReverse">
+              Item Code 
+              <span *ngIf="sortType == 'itemCode' && !sortReverse" class="fa fa-caret-down"></span>
+              <span *ngIf="sortType == 'itemCode' && sortReverse" class="fa fa-caret-up"></span>
+            </div>
+          </td>
+          <td class="text-center">
+            <div (click)="sortType = 'itemName'; sortReverse = !sortReverse">
+              Item Name 
+              <span *ngIf="sortType == 'itemName' && !sortReverse" class="fa fa-caret-down"></span>
+              <span *ngIf="sortType == 'itemName' && sortReverse" class="fa fa-caret-up"></span>
+            </div>
+          </td>
+          <td class="text-center">
+            <div (click)="sortType = 'itemStatus'; sortReverse = !sortReverse">
+              Item Status 
+              <span *ngIf="sortType == 'itemStatus' && !sortReverse" class="fa fa-caret-down"></span>
+              <span *ngIf="sortType == 'itemStatus' && sortReverse" class="fa fa-caret-up"></span>
+            </div>
+          </td>
+          <td class="text-center">
+            <div (click)="sortType = 'itemPrice'; sortReverse = !sortReverse">
+              Item Price
+              <span *ngIf="sortType == 'itemPrice' && !sortReverse" class="fa fa-caret-down"></span>
+              <span *ngIf="sortType == 'itemPrice' && sortReverse" class="fa fa-caret-up"></span>
+            </div>
+          </td>
+          <td class="text-center">
+              <div (click)="sortType = 'quantity'; sortReverse = !sortReverse">
+                Quantity
+                <span *ngIf="sortType == 'quantity' && !sortReverse" class="fa fa-caret-down"></span>
+                <span *ngIf="sortType == 'quantity' && sortReverse" class="fa fa-caret-up"></span>
+              </div>
+            </td>
+          <td  class="text-center">
+            <div (click)="sortType = 'itemDateTime'; sortReverse = !sortReverse">
+              Modified Info
+              <span *ngIf="sortType == 'itemDateTime' && !sortReverse" class="fa fa-caret-down"></span>
+              <span *ngIf="sortType == 'itemDateTime' && sortReverse" class="fa fa-caret-up"></span>
+            </div>
+          </td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'"  class="text-center">
+              <div (click)="sortType = 'itemDateTime'; sortReverse = !sortReverse">
+                User
+                <span *ngIf="sortType == 'itemDateTime' && !sortReverse" class="fa fa-caret-down"></span>
+                <span *ngIf="sortType == 'itemDateTime' && sortReverse" class="fa fa-caret-up"></span>
+              </div>
+            </td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'" class="text-center">
+            <div>
+              Action
+            </div>
+          </td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'" class="text-center">
+            <div>
+              Delete
+            </div>
+          </td>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let item of product?.ResponseData">
+          <td class="text-center">{{item.itemCode}}</td>
+          <td class="text-center">{{item.itemName}}</td>
+          <td class="text-center">{{item.itemStatus}}</td>
+          <td class="text-center">{{item.itemPrice}}</td>
+          <td class="text-center">{{item.quantityItem}}</td>
+          <td class="text-center">{{item.detailModify}} - {{item.user}}</td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'" class="text-center">{{item.productInUser}}</td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'" class="text-center"><button type="button" class="btn btn-warning text-white" (click)="EditProduct(item)">Edit</button></td>
+          <td *ngIf="userDetail.ResponseData.userRole == 'admin'" class="text-center"><button type="button" class="btn btn-danger" (click)="DeleteProduct(item.productId)">Delete</button></td>
+        </tr>
+      </tbody>
+      
+    </table>
+   
+  </div>
+</div>
+

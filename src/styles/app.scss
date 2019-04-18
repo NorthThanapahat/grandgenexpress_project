@@ -1,0 +1,131 @@
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/bootstrap";
+@import "spinner";
+@import "utils";
+@import "rtl";
+@import "responsive";
+@import "../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@media print {
+    .breadcrumb {
+        display: none !important;
+    }
+}
+app-root{
+    width:100%;
+    height: 100%;
+}
+app-login{
+    width:100%;
+    height: 100%;
+    background: #055A79;
+}
+.table .thead-dark th{
+    background:#055A79;
+}
+body,html{
+    width:100%;
+    height:100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+.full-screen{
+    width:60%;
+    height:60%;
+}
+.img-logo{
+    width:100px;
+    height: 100%;
+}
+.cdk-overlay-pane{
+
+}
+.btn-link{
+    cursor: pointer;
+}
+.mat-dialog-container{
+    background: none;
+}
+.popup-modal{
+    background: #055A79;
+}
+.text-title-item{
+    margin-left: 15px; 
+    font-size: 25px;
+}
+body{
+    height:100%;
+    display: inline-block;
+    background:#fff;
+}
+.min-width-20{
+    min-width: 200px;
+}
+// padding margin 
+.padding-left-15{
+    padding-left: 15px;
+}
+.padding-left-35{
+    padding-left: 35px;
+}
+.font-size-15{
+    font-size: 15px;
+}
+.font-size-20{
+    font-size: 20px;
+}
+.font-size-25{
+    font-size:25px;
+}
+app-report{
+    width:100%;
+    height: 100%;
+    background:#333;
+}
+
+
+.margin-left{
+    margin-left:10px;
+}
+.error-input{
+    border: 1px solid red !important;
+}
+.bt-style{
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.margin-top{
+    margin-top:10px;
+}
+.margin-right{
+    margin-right: 10px;
+}
+
+.margin-left{
+    margin-left: 10px;
+}
+.head-form{
+    font-size: 25px;
+    background:rgb(4, 63, 85);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-top-left-radius:10px;
+    border-top-right-radius: 10px;
+    color: rgb(233, 233, 233);
+}
+thead>tr>td{
+    background:rgb(4, 63, 85);
+    color:#fff;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+@media only screen and (max-width:360px){
+    .margin-top-mobile{
+        margin-top:10px;
+    }
+}

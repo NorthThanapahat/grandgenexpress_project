@@ -1,0 +1,14 @@
+<div class="container">
+
+  <div class="content-alert">
+    <div class="text-white font-size-25" mat-dialog-title>{{data.title}}</div>
+    <mat-dialog-content class="mat-typography text-white font-size-15">
+      {{data.content}}
+    </mat-dialog-content>
+    <mat-dialog-actions class="margin-top" align="center">
+      <button class="btn btn-danger" mat-button (click)="onNoClick()">Cancle</button>
+      <button style="margin-left:10px;" class="btn btn-success" mat-button [mat-dialog-close]="'OK'" cdkFocusInitial>Ok</button>
+    </mat-dialog-actions>
+  </div>
+
+</div>

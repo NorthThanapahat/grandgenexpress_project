@@ -1,0 +1,68 @@
+<div class="container">
+
+
+  <button type="button" (click)="back()" class="btn btn-danger">Back</button>
+  <form style="margin-top:20px;" class="center">
+    <div class="form-group row col-5  float-left">
+      <label for="inputPassword" class="col-sm-3 col-form-label">Firstname*</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" name="firstname" [(ngModel)]="firstname" id="inputPassword" placeholder="Firstname"
+          required>
+      </div>
+    </div>
+    <div class="form-group row col-5">
+      <label for="inputPassword" class="col-sm-3 col-form-label">Lastname</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" name="lastname" [(ngModel)]="lastname" id="inputPassword" placeholder="Lastname">
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="inputPassword" class="col-sm-2 col-form-label">UserName*</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" name="username" [(ngModel)]="username" id="inputPassword" placeholder="Username"
+          required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" name="email" [(ngModel)]="email" id="inputPassword" placeholder="Email">
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="inputPassword" class="col-sm-2 col-form-label">Password*</label>
+      <div class="col-sm-10">
+        <input type="password" [(ngModel)]="password" name="password" class="form-control" id="inputPassword" placeholder="Password"
+          required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="inputPassword" class="col-sm-2 col-form-label">Confirm Password*</label>
+      <div class="col-sm-10">
+        <input type="password" [(ngModel)]="confirmPass" name="confirmPass" class="form-control" id="inputPassword" placeholder="Confirm Password"
+          required>
+      </div>
+    </div>
+
+    <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin'">
+      <label for="itemUserRef" class="col-sm-2 col-form-label"><b>UserRole*</b> </label>
+      <div class="col-sm-5">
+        <select class="form-control" name="user" [(ngModel)]="userRole"(change)="UserRoleChange($event.target.value)">
+          <option value = 'admin'>Admin</option>
+          <option value = 'shop'>Shop</option>
+          <option value = 'cashier'>Cashier</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin' && isCashier">
+      <label for="itemUserRef" class="col-sm-2 col-form-label"><b>For User*</b> </label>
+      <div class="col-sm-5">
+        <select class="form-control" name="user" [(ngModel)]="userRefSelect"(change)="UserRefSelect($event.target.value)">
+          <option *ngFor="let item of userRef" [value] = "item.username">{{item.Firstname}} {{item.Lastname}}</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-3 float-right">Save</button>
+  </form>
+</div>

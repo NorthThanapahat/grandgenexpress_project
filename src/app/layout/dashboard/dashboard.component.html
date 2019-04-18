@@ -1,0 +1,91 @@
+<div [@routerTransition]>
+    <h2 class="text-color-theme"><b>Dashboard</b></h2>
+    <div class="col-12">
+
+        <div class="detail-group float-left col-12 col-md-5 text-left">
+            <i style="font-size: 40px;" class="fa fa-money float-left"></i>
+
+            <div class="float-left text-title-item">
+                Today's Eearning
+            </div>
+
+            <div class="clearfix"></div>
+            <div>
+                <b>{{todayEarnings |  number:'.2-2'}} </b> THB
+            </div>
+        </div>
+        <div class="detail-group float-left col-12 col-md-5 text-left">
+            <i style="font-size: 40px;" class="fa fa-money float-left"></i>
+
+            <div class="col-8 col-md-10 float-left text-title-item">
+                Total Eearnings ({{thisMonth}})
+            </div>
+
+            <div class="clearfix"></div>
+            <div>
+                <b>{{monthEarnings |  number:'.2-2'}} </b> THB
+            </div>
+
+        </div>
+
+
+        <div class="detail-group col-12 col-md-5 float-left text-left">
+            <i style="font-size: 40px;" class="fa fa-list float-left"></i>
+
+            <div class="detail-item float-left text-title-item">
+                Today's Order
+            </div>
+
+            <div class="detail-item text-right">
+                <b>{{todayOrder}} </b>
+            </div>
+        </div>
+        <div class="detail-group col-12 col-md-5 float-left text-left">
+            <i style="font-size: 40px;" class="fa fa-list float-left"></i>
+
+            <div class="detail-item float-left text-title-item">
+                Total Order ({{thisMonth}})
+            </div>
+
+            <div class="detail-item text-right text-title-item">
+                <b>{{monthOrder}} </b>
+            </div>
+        </div>
+        <div class="detail-group col-12 col-md-5 float-left text-left">
+            <i style="font-size: 40px;" class="fa fa-briefcase float-left"></i>
+
+            <div class="detail-item float-left text-title-item">
+                Pending Delivery
+            </div>
+
+            <div class="detail-item text-right">
+                <b>{{pendingDelivery}} </b>
+            </div>
+        </div>
+        <div class="detail-group col-12 col-md-5 float-left">
+            <i style="font-size: 40px;" class="fa fa-briefcase float-left"></i>
+
+            <div  class="detail-item float-left text-title-item">
+                In Stock
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="padding-left-35" *ngFor="let item of productData?.ResponseData;let i = index;">
+                <b>- {{item.itemName}} ({{item.quantityItem}}) </b>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Line Chart
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="130" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div> -->
+</div>
