@@ -1,6 +1,5 @@
 export class ConfigApi{
-    // public static API_URL="https://api.grandgenexpress.com/";
-    public static API_URL="https://api.dsexpresslaos.com/";
+    public static API_URL="https://api.grandgenexpress.com/";
     
 
     public static login_url = ConfigApi.API_URL+"auth";
