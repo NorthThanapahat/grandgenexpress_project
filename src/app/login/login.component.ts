@@ -6,6 +6,7 @@ import { ApiProvider } from '../shared/services/api';
 import { UserDetails } from '../model/response/user_detail';
 
 import { WeDataProvider } from '../shared/we-data-provider';
+import { appName } from '../app.constant';
 
 @Component({
     selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
     error = false;
     errorItem: any;
     message = '';
+    appName = appName;
     public userDetail :UserDetails;
     constructor(
         private translate: TranslateService,
@@ -50,7 +52,9 @@ export class LoginComponent implements OnInit {
             }
         });
     }
-    ngOnInit() { }
+    ngOnInit() { 
+        console.log(appName);
+    }
     Validate(){
         if (this.username == '' || this.password == '') {
             if (this.username == '') {

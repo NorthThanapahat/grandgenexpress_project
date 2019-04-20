@@ -225,10 +225,9 @@ export class CreateInvoiceComponent implements OnInit {
       }
       if (item.quantity != undefined) {
         console.log("item.quantity=>", item.quantity)
-        for (let i of this.product.ResponseData) {
-          this.totalQuantity += Number.parseFloat(i.quantity);
+          this.totalQuantity += Number.parseFloat(item.quantity);
         }
-      }
+      
     }
     console.log(this.discount);
     console.log(this.addCharges);

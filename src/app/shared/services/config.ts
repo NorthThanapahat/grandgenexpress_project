@@ -1,5 +1,7 @@
 export class ConfigApi{
-    public static API_URL="https://api.grandgenexpress.com/";
+    // public static API_URL="https://api.grandgenexpress.com/";
+    public static API_URL="https://api.dsexpresslaos.com/";
+    
 
     public static login_url = ConfigApi.API_URL+"auth";
     public static userDetails_url = ConfigApi.API_URL+"userInfomation";
@@ -20,6 +22,4 @@ export class ConfigApi{
     public static ResetPassword_url = ConfigApi.API_URL+"ResetPassword";
     public static DeleteUser_url = ConfigApi.API_URL+"DeleteUser";
 
-
-    
 }
