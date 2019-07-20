@@ -34,14 +34,15 @@ export class CreateInvoiceComponent implements OnInit {
   isUserChange: false;
   product: Product;
   totalPrice: number = 0;
-  addCharges: string;
+  addCharges: number;
   priceList: Array<String> = [];
   userRef: string;
   totalQuantity: number = 0;
   Total: number = 0;
-  discount: string;
+  discount: number;
   isCOD = false;
   cod: string;
+  codCost: number;
   paymentType: string;
   image: any;
   customerAddress: string;
@@ -51,10 +52,13 @@ export class CreateInvoiceComponent implements OnInit {
   customerRefNo: string;
   amount: string;
   different: string;
+  shipping: number;
   productSave: OrderSave;
   productDataSave: OrderProductData;
+  additionalCost: number;
   orderNoSave: string;
   error: boolean = false;
+  Remark: string = '';
   orderDetail: OrderDetailSave = new OrderDetailSave();
   constructor(
     private dialog: MatDialog,
@@ -64,8 +68,13 @@ export class CreateInvoiceComponent implements OnInit {
     public util: UtilProvider) { }
 
   ngOnInit() {
-    this.addCharges = '0';
-    this.discount = '0';
+  
+    this.addCharges = 0;
+    this.codCost = 0;
+    this.Total = 0;
+    this.discount = 0;
+    this.additionalCost = 0;
+    this.shipping = 0
     this.date = moment().format('DD/MM/YYYY');
     console.log(this.date)
     this.userDetail = this.weProvider.GetUserDetail();
@@ -88,12 +97,32 @@ export class CreateInvoiceComponent implements OnInit {
   CODChange(value) {
     if (value == "yes") {
       this.isCOD = true;
+      this.codCost = this.totalPrice *0.03;
     } else {
       this.isCOD = false;
+      this.codCost = 0;
     }
   }
   processFile(value) {
     this.readThis(value.target);
+  }
+  Shipping(value) {
+    if (this.shipping == null)
+      this.shipping = 0;
+    this.Total = this.SUMTotal();
+  }
+  AdditionalCost(value) {
+    if (this.additionalCost == null)
+      this.additionalCost = 0;
+    this.Total = this.SUMTotal();
+  }
+
+  SUMTotal() {
+    this.codCost = this.totalPrice * 0.03;
+    let total =  this.totalPrice - this.discount + this.addCharges + this.codCost + this.additionalCost + this.shipping;
+    this.different = "-" + total.toString();
+  
+    return total;
   }
 
   readThis(inputValue: any): void {
@@ -213,8 +242,8 @@ export class CreateInvoiceComponent implements OnInit {
     this.totalPrice = 0;
     this.product.ResponseData[index].price = (Number.parseFloat(itemPrice) * value).toString();
     this.product.ResponseData[index].quantity = value.toString();
-    console.log(value);
-    console.log(this.product);
+    console.log("value=>", value);
+    console.log("product=>", this.product);
     for (let item of this.product.ResponseData) {
 
       if (item.price != undefined) {
@@ -223,26 +252,33 @@ export class CreateInvoiceComponent implements OnInit {
         this.totalPrice += Number.parseFloat(item.price);
 
       }
-      if (item.quantity != undefined) {
-        console.log("item.quantity=>", item.quantity)
-          this.totalQuantity += Number.parseFloat(item.quantity);
-        }
-      
+      if (item.quantity == undefined || item.quantity == '' || item.quantity == null) {
+        item.quantity = '0';
+      }
+      this.totalQuantity += Number.parseFloat(item.quantity);
+
     }
     console.log(this.discount);
     console.log(this.addCharges);
     if (this.discount != undefined && this.addCharges != undefined) {
-      this.Total = this.totalPrice - Number.parseFloat(this.discount) + Number.parseFloat(this.addCharges);
+      this.Total = this.SUMTotal();
+      
       console.log('this.discount != undefined && this.addCharges != undefined');
     } else if (this.discount != undefined) {
       console.log('(this.discount != undefined');
 
-      this.Total = this.totalPrice - Number.parseFloat(this.discount);
+      this.Total = this.SUMTotal();
     } else if (this.addCharges != undefined) {
       console.log('this.addCharges != undefined');
-      this.Total = this.totalPrice + Number.parseFloat(this.addCharges);
+      this.Total = this.SUMTotal();
     } else {
-      this.Total = this.totalPrice;
+      this.Total = this.SUMTotal();
+    }
+
+    if (this.isCOD){
+      this.codCost = this.totalPrice * 0.03;
+    }else{
+      this.codCost = 0;
     }
     this.different = "-" + this.Total.toString();
     console.log(this.totalQuantity)
@@ -251,7 +287,9 @@ export class CreateInvoiceComponent implements OnInit {
   Validate() {
     return true;
   }
+
   save() {
+
     console.log(this.addCharges);
     if (this.isCustomerEmpty) {
       if (this.userDetail.ResponseData.userRole == "admin") {
@@ -285,12 +323,12 @@ export class CreateInvoiceComponent implements OnInit {
         usernameSave = this.userDetail.ResponseData.userRef;
       }
       console.log("usernameSave:", usernameSave);
-      
+
       this.saveMethod(usernameSave, this.customer.ResponseData[0].customerId);
     }
   }
 
-  private saveMethod(username: string,customerId:string) {
+  private saveMethod(username: string, customerId: string) {
     let orderSave = [];
 
     for (let i in this.product.ResponseData) {
@@ -315,10 +353,15 @@ export class CreateInvoiceComponent implements OnInit {
         this.orderDetail.username = username;
         this.orderDetail.createBy = this.userDetail.ResponseData.username;
         this.orderDetail.cod = cod;
+        this.orderDetail.addCharge = this.addCharges+"";
+        this.orderDetail.discount = this.discount+"";
+        this.orderDetail.additionalCost = this.additionalCost+"";
+        this.orderDetail.shippingFee = this.shipping+"";
+        this.orderDetail.codCost = this.codCost + "";
         this.orderDetail.customerId = customerId;
         this.orderDetail.orderDetail = new OrderDetail();
-        this.orderDetail.orderDetail.addCharge = this.addCharges;
-        this.orderDetail.orderDetail.discount = this.discount;
+        this.orderDetail.orderDetail.addCharge = this.addCharges + "";
+        this.orderDetail.orderDetail.discount = this.discount + "";
         this.orderDetail.orderDetail.grandTotal = this.Total.toString();
         this.orderDetail.orderDetail.totalCharge = this.totalPrice.toString();
         this.orderDetail.orderDetail.totalQuantity = this.totalQuantity.toString();
@@ -343,23 +386,19 @@ export class CreateInvoiceComponent implements OnInit {
     this.different = (Number.parseFloat(value) - this.Total).toString();
   }
   Charges(value) {
-    if (this.discount != undefined) {
-      this.Total = this.totalPrice + Number.parseFloat(value) - Number.parseFloat(this.discount);
-
-    } else {
-      this.Total = this.totalPrice + Number.parseFloat(value);
+    if (this.addCharges == null) {
+      this.addCharges = 0;
     }
-
+    this.Total = this.SUMTotal();
     this.different = "-" + this.Total.toString();
 
   }
   Discount(value) {
-    if (this.addCharges != undefined) {
-      this.Total = this.totalPrice - Number.parseFloat(value) + Number.parseFloat(this.addCharges);
-
-    } else {
-      this.Total = this.totalPrice - Number.parseFloat(value);
+    console.log(this.discount)
+    if (this.discount == null) {
+      this.discount = 0;
     }
+    this.Total = this.SUMTotal();
     this.different = "-" + this.Total.toString();
 
   }

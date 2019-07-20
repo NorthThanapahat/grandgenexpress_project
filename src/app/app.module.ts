@@ -23,6 +23,7 @@ import { AlertMessageComponent } from './alert-message/alert-message.component';
 import { ShowimageComponent } from './showimage/showimage.component';
 import { ResetpasswordComponent } from './modal/resetpassword/resetpassword.component';
 import { ConfirmModalComponent } from './modal/confirm-modal/confirm-modal.component';
+import { ShowOrderdetailComponent } from './modal/show-orderdetail/show-orderdetail.component';
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
     /* for development
@@ -53,10 +54,10 @@ export const createTranslateLoader = (http: HttpClient) => {
         }),
       
     ],
-    declarations: [AppComponent, ReportDataComponent, AlertMessageComponent, ShowimageComponent, ResetpasswordComponent, ConfirmModalComponent],
+    declarations: [AppComponent, ReportDataComponent, AlertMessageComponent, ShowimageComponent, ResetpasswordComponent, ConfirmModalComponent, ShowOrderdetailComponent],
     providers: [AuthGuard, ApiProvider,WeDataProvider,UtilProvider],
     bootstrap: [AppComponent],
-    entryComponents:[ReportDataComponent,AlertMessageComponent,ShowimageComponent,ResetpasswordComponent,ConfirmModalComponent],
+    entryComponents:[ReportDataComponent,AlertMessageComponent,ShowimageComponent,ResetpasswordComponent,ConfirmModalComponent,ShowOrderdetailComponent],
     exports:[
         MatDialogModule
     ]

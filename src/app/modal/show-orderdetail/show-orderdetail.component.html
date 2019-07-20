@@ -1,0 +1,26 @@
+<div class="container padding bg-white">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Invoice No.</th>
+        <th scope="col">ProductCode</th>
+        <th scope="col">ProductName</th>
+        <th scope="col">quantity</th>
+        <th scope="col">quantityInStock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.value.order">
+        <th scope="row">{{item.orderNo}}</th>
+        <td>{{item.itemCode}}</td>
+        <td>{{item.itemName}}</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.quantityItem}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-right">
+    <button (click)="Close()" class="btn btn-light margin-top">Cancle</button>
+  </div> 
+
+</div>

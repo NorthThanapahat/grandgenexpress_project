@@ -8,6 +8,7 @@ import { inquiryOrder } from 'src/app/model/response/inquiryOrder';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { AlertMessageComponent } from 'src/app/alert-message/alert-message.component';
 import { ShowimageComponent } from 'src/app/showimage/showimage.component';
+import { ShowOrderdetailComponent } from 'src/app/modal/show-orderdetail/show-orderdetail.component';
 
 @Component({
   selector: 'app-inquiry-invoice',
@@ -60,6 +61,16 @@ export class InquiryInvoiceComponent implements OnInit {
         
         const dialogRef = this.dialog.open(ShowimageComponent, dialogConfig);
 
+  }
+  ShowDetail(value){
+    const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.maxWidth = "70%";
+        dialogConfig.panelClass = "popup-modal"
+          dialogConfig.data = { value };
+        
+        const dialogRef = this.dialog.open(ShowOrderdetailComponent, dialogConfig);
   }
   UserOption(value) {
     let data = {

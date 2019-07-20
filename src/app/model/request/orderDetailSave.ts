@@ -6,6 +6,11 @@ export class OrderDetailSave{
     payment:Payment;
     customerId:string;
     cod:string;
+    codCost:string;
+    addCharge:string;
+    discount:string;
+    additionalCost:string;
+    shippingFee:string;
 }
 
 export class OrderDetail{

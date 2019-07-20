@@ -26,7 +26,7 @@
           <tbody>
             <tr *ngFor="let item of inquiryOrder?.ResponseData.data ; let i = index;">
               <th scope="row">{{i+1}}</th>
-              <td>{{item.orderNo}}</td>
+              <td><div class="btn-link" (click)="ShowDetail(item)">{{item.orderNo}}</div></td>
               <td style="width:30%;">{{item.customerName}} <br>{{item.customerAddress}}</td>
               <td>{{item.paymentDate}}</td>
               <td>{{item.user}}</td>

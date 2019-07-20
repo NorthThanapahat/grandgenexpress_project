@@ -26,13 +26,13 @@
     <div class="form-group row col-12">
       <label for="itemStatus" class="col-sm-2 col-form-label"><b>COD*</b> </label>
       <div class="col-sm-6">
-        <select class="form-control" name="COD" [(ngModel)]="cod" (change)="CODChange($event.target.value)">
+        <select class="form-control" name="COD" [(ngModel)]="cod"  (change)="CODChange($event.target.value)">
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
     </div>
-
+    
     <div class="form-group row col-12">
       <label for="itemName" class="col-sm-2 col-form-label"><b>Ref No. / CB No.</b></label>
       <div class="col-sm-6">
@@ -51,13 +51,6 @@
       <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Mobile No. *</b></label>
       <div class="col-sm-5">
         <input type="text" [(ngModel)]="customerMobile" name="customerMobile" class="form-control" id="inputPassword"
-          placeholder="" required>
-      </div>
-    </div>
-    <div class="form-group row col-12">
-      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer E-mail</b></label>
-      <div class="col-sm-6">
-        <input type="text" [(ngModel)]="customerEmail" name="customerEmail" class="form-control" id="inputPassword"
           placeholder="" required>
       </div>
     </div>
@@ -130,14 +123,14 @@
         <td class="text-center">{{item.itemPrice}}</td>
         <td class="text-center"><input class="text-center" type=number [(ngModel)]="item.quantity"
             (keyup)="QuantityOnChange($event.target.value,item.itemPrice,i)"></td>
-        <td class="text-center">{{item.price}}</td>
+        <td class="text-center">{{item.price | number:".2"}}</td>
       </tr>
       <tr>
         <td class="text-center"></td>
         <td class="text-center"></td>
         <td class="text-center"></td>
         <td class="text-right">Total Order Charges (THB)</td>
-        <td class="text-center">{{totalPrice}}</td>
+        <td class="text-center">{{totalPrice | number:".2"}}</td>
       </tr>
       <tr>
         <td class="text-center"></td>
@@ -170,9 +163,36 @@
         <td class="text-center"></td>
         <td class="text-center"></td>
         <td class="text-center"></td>
+        <td class="text-right">COD</td>
+        <td class="text-center">
+          {{codCost | number:".2"}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Shipping Fee</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="shipping" (change)="Shipping($event.target.value)">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Additional Cost</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="additionalCost" (change)="AdditionalCost($event.target.value)">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
         <td class="text-right">Grand Total (THB)</td>
         <td class="text-center">
-          {{Total}}
+          {{Total | number:".2"}}
         </td>
       </tr>
     </tbody>
@@ -226,21 +246,21 @@
           <td class="text-center"></td>
           <td class="text-right">Total Order</td>
           <td class="text-center">
-              {{Total}}
+              {{Total | number:".2"}}
           </td>
         </tr>
         <tr>
           <td class="text-center"></td>
           <td class="text-right">Paid Amount</td>
           <td class="text-center">
-            {{amount}}
+            {{amount | number:".2"}}
           </td>
         </tr>
         <tr>
             <td class="text-center"></td>
             <td class="text-right">Different</td>
             <td class="text-center">
-             {{different}}
+             {{different | number:".2"}}
             </td>
           </tr>
     </tbody>

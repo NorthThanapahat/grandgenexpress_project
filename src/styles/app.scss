@@ -33,6 +33,9 @@ body,html{
     width:60%;
     height:60%;
 }
+.bg-white{
+    background:white;
+}
 .img-logo{
     width:100px;
     height: 100%;
@@ -43,11 +46,27 @@ body,html{
 .btn-link{
     cursor: pointer;
 }
-.mat-dialog-container{
-    background: none;
+// .mat-dialog-container{
+//     background: none;
+// }
+.relative{
+    position: relative;
 }
-.popup-modal{
-    background: #055A79;
+.ab{
+    position: absolute;
+}
+.top-right{
+    top:10px;
+    right: 10px;
+}
+.modal-popup {
+    background: #fff !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+   padding: 0;
+}
+.mat-dialog-container{
+   padding: 0 !important; 
 }
 .text-title-item{
     margin-left: 15px; 
@@ -61,7 +80,20 @@ body{
 .min-width-20{
     min-width: 200px;
 }
+.border{
+    border: 1px solid #333;
+}
 // padding margin 
+.padding{
+    padding:10px;
+}
+
+.padding-20{
+    padding:20px;
+}
+.padding-left{
+    padding-left: 10px;
+}
 .padding-left-15{
     padding-left: 15px;
 }
@@ -82,18 +114,38 @@ app-report{
     height: 100%;
     background:#333;
 }
+app-report-data{
+    width:100%;
+    height: 100%;
+}
 
-
+.link{
+    cursor: pointer;
+}
 .margin-left{
     margin-left:10px;
 }
 .error-input{
     border: 1px solid red !important;
 }
+.img-paid{
+    position: fixed;
+    z-index: 999;
+    opacity: .7;
+    width: 300px;
+    bottom: 20px;
+    left: 10px;
+}
+.font-35{
+    font-size: 35px;
+}
 .bt-style{
     font-size: 18px;
     margin-left: 10px;
     margin-right: 10px;
+}
+.margin-top{
+    margin-top:10px;
 }
 .margin-top{
     margin-top:10px;
@@ -127,5 +179,8 @@ input[type=number]::-webkit-outer-spin-button {
 @media only screen and (max-width:360px){
     .margin-top-mobile{
         margin-top:10px;
+    }
+    .font-35{
+        font-size: 25px;
     }
 }

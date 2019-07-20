@@ -286,6 +286,11 @@ app.post('/orderDetail', (req, res) => {
       var orderDetail = req.body.orderDetail;
       var payment = req.body.payment;
       var cod = req.body.cod;
+      var codCost = req.body.codCost;
+      var addCharge = req.body.addCharge;
+      var discount = req.body.discount;
+      var additionalCost = req.body.additionalCost;
+      var shippingFee = req.body.shippingFee;
       var customerId = req.body.customerId;
       var createBy = req.body.createBy;
       var status = "Waiting for shipment"
@@ -302,7 +307,7 @@ app.post('/orderDetail', (req, res) => {
 
             if (result.affectedRows > 0) {
                   var paymentDate = moment().tz("Asia/Bangkok").format('DD/MM/YYYY HH:mm:ss');
-                  db.query(`INSERT INTO payment (orderNo,paymentType,paymentImage,amount,paymentDate,cod,user,status,createBy) VALUES ('` + orderNo + `','` + payment.paymentType + `','` + payment.paymentImage + `','` + payment.amount + `','` + paymentDate + `','` + cod + `','` + username + `','` + status + `','` + createBy + `')`, function (err, result, fields) {
+                  db.query(`INSERT INTO payment (orderNo,paymentType,paymentImage,amount,paymentDate,cod,codCost,addCharge,discount,additionalCost,shippingFee,user,status,createBy) VALUES ('` + orderNo + `','` + payment.paymentType + `','` + payment.paymentImage + `','` + payment.amount + `','` + paymentDate + `','` + cod + `','` + codCost + `','` + addCharge + `','` + discount + `','` + additionalCost + `','` + shippingFee + `','` + username + `','` + status + `','` + createBy + `')`, function (err, result, fields) {
                         if (err) {
                               res.json({
                                     ResponseCode: "Error",
@@ -422,103 +427,56 @@ app.post('/InquiryOrder', (req, res) => {
       var orderDetail = [];
       var userRole = '';
       ConnectDB();
-      db.query("SELECT * FROM user_details WHERE username = '" + username + "'", function (err, result, fields) {
-            if (err) throw err;
-            userRole = result[0].userRole;
-            if (userRole == 'admin') {
-                  db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId ", function (err, resultOrderDetail, fields) {
-                        if (err) {
-                              res.json({
-                                    ResponseCode: "Error",
-                                    ResponseData: err
-                              });
-                        }
-                        for (let i in resultOrderDetail) {
-                              resultOrderDetail[i].paymentImage = String.fromCharCode.apply(null, new Uint16Array(resultOrderDetail[i].paymentImage));
-                              db.query("SELECT * FROM `order` WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
-                                    if (err) {
-                                          res.json({
-                                                ResponseCode: "Error",
-                                                ResponseData: err
-                                          });
-                                    }
-                                    for (var j in result) {
 
 
-                                          if (result[j].orderNo == resultOrderDetail[i].orderNo) {
-                                                orderDetail.push(result[j]);
-                                          }
-
-                                    }
-
-                                    resultOrderDetail[i].order = orderDetail;
-                                    orderDetail = [];
-                                    if (i == resultOrderDetail.length - 1) {
-                                          res.json({
-                                                ResponseCode: "Success",
-                                                ResponseData: { data: resultOrderDetail }
-                                          });
-                                    }
-                              });
-
-                        }
-
-                  });
-            } else {
-                  db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId WHERE order_total.user = '" + username + "'", function (err, resultOrderDetail, fields) {
-                        if (err) {
-                              res.json({
-                                    ResponseCode: "Error",
-                                    ResponseData: err
-                              });
-                        }
-
-                        if (resultOrderDetail.length == 0) {
-                              res.json({
-                                    ResponseCode: "Success",
-                                    ResponseData: { data: resultOrderDetail }
-                              });
-                        } else {
-
-                              for (let i in resultOrderDetail) {
-                                    resultOrderDetail[i].paymentImage = String.fromCharCode.apply(null, new Uint16Array(resultOrderDetail[i].paymentImage));
-                                    db.query("SELECT * FROM `order` WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
-                                          if (err) {
-                                                res.json({
-                                                      ResponseCode: "Error",
-                                                      ResponseData: err
-                                                });
-                                          }
-
-                                          for (var j in result) {
-
-
-                                                if (result[j].orderNo == resultOrderDetail[i].orderNo) {
-                                                      orderDetail.push(result[j]);
-                                                }
-
-                                          }
-
-                                          resultOrderDetail[i].order = orderDetail;
-                                          orderDetail = [];
-                                          if (i == resultOrderDetail.length - 1) {
-                                                res.json({
-                                                      ResponseCode: "Success",
-                                                      ResponseData: { data: resultOrderDetail }
-                                                });
-                                          }
-
-
-                                    });
-
-                              }
-                        }
-
-
+      db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId WHERE order_total.user = '" + username + "' AND payment.status != 'Paid'", function (err, resultOrderDetail, fields) {
+            if (err) {
+                  res.json({
+                        ResponseCode: "Error",
+                        ResponseData: err
                   });
             }
 
+            if (resultOrderDetail.length == 0) {
+                  res.json({
+                        ResponseCode: "Success",
+                        ResponseData: { data: resultOrderDetail }
+                  });
+            } else {
+                  for (let i in resultOrderDetail) {
+                        resultOrderDetail[i].paymentImage = String.fromCharCode.apply(null, new Uint16Array(resultOrderDetail[i].paymentImage));
+                        db.query("SELECT * FROM `order` as o INNER JOIN product ON o.productId = product.productId WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
+                              if (err) {
+                                    res.json({
+                                          ResponseCode: "Error",
+                                          ResponseData: err
+                                    });
+                              }
+                              for (var j in result) {
+
+
+                                    if (result[j].orderNo == resultOrderDetail[i].orderNo) {
+                                          orderDetail.push(result[j]);
+                                    }
+
+                              }
+
+                              resultOrderDetail[i].order = orderDetail;
+                              orderDetail = [];
+                              if (i == resultOrderDetail.length - 1) {
+                                    res.json({
+                                          ResponseCode: "Success",
+                                          ResponseData: { data: resultOrderDetail }
+                                    });
+                              }
+                        });
+
+                  }
+            }
+
+
       });
+
 
 });
 app.post('/ResetPassword', (req, res) => {
@@ -744,48 +702,48 @@ app.post('/Report', (req, res) => {
                                           ResponseData: err
                                     });
                               }
-                              for (let i in resultOrderDetail) {
+                              if (resultOrderDetail.length != 0) {
+                                    for (let i in resultOrderDetail) {
 
-                                    db.query("SELECT * FROM `order` WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
-                                          var datefromdata = moment(dateFrom, "MMDDYYYY");
-                                          var datetodata = moment(dateTo, "MMDDYYYY");
+                                          db.query("SELECT * FROM `order` INNER JOIN product ON `order`.productId = product.productId WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
+                                                var datefromdata = moment(dateFrom, "MMDDYYYY");
+                                                var datetodata = moment(dateTo, "MMDDYYYY");
 
-                                          if (err) {
-                                                res.json({
-                                                      ResponseCode: "Error",
-                                                      ResponseData: err
-                                                });
-                                          }
-                                          for (var j in result) {
-                                                if (result[j].orderNo == resultOrderDetail[i].orderNo) {
-                                                      orderDetail.push(result[j]);
+                                                if (err) {
+                                                      res.json({
+                                                            ResponseCode: "Error",
+                                                            ResponseData: err
+                                                      });
                                                 }
+                                                for (var j in result) {
 
-                                          }
-                                          resultOrderDetail[i].order = orderDetail;
-                                          orderDetail = [];
+                                                      if (result[j].orderNo == resultOrderDetail[i].orderNo) {
+                                                            orderDetail.push(result[j]);
+                                                      }
 
-                                          var dateItem = moment(resultOrderDetail[i].date.split(' ')[0], "DDMMYYYY");
-                                          if (dateItem >= datefromdata && dateItem <= datetodata) {
-
-                                                resultReport.push(resultOrderDetail[i]);
-                                                // if (i == resultOrderDetail.length - 1) {
-                                                //       res.json({
-                                                //             ResponseCode: "Success",
-                                                //             ResponseData: { data: resultOrderDetail }
-                                                //       });
-                                                // }
+                                                }
+                                                resultOrderDetail[i].order = orderDetail;
+                                                orderDetail = [];
+                                                var dateItem = moment(resultOrderDetail[i].date.split(' ')[0], "DD/MM/YYYY");
+                                                if (dateItem >= datefromdata && dateItem <= datetodata) {
+                                                      resultReport.push(resultOrderDetail[i]);
+                                                }
                                                 if (i == resultOrderDetail.length - 1) {
                                                       res.json({
                                                             ResponseCode: "Success",
                                                             ResponseData: { data: resultReport }
                                                       });
                                                 }
-                                          }
+
+                                          });
+
+                                    }
+                              } else {
+                                    res.json({
+                                          ResponseCode: "Success",
+                                          ResponseData: { resultOrderDetail }
                                     });
-
                               }
-
                         });
                   } else {
                         db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId INNER JOIN history ON order_total.orderNo = history.orderNo WHERE order_total.user = '" + username + "' AND payment.status = 'Paid'", function (err, resultOrderDetail, fields) {
@@ -795,46 +753,45 @@ app.post('/Report', (req, res) => {
                                           ResponseData: err
                                     });
                               }
-                              for (let i in resultOrderDetail) {
+                              if (resultOrderDetail.length != 0) {
+                                    for (let i in resultOrderDetail) {
 
-                                    db.query("SELECT * FROM `order` WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
-                                          var datefromdata = moment(dateFrom, "MMDDYYYY");
-                                          var datetodata = moment(dateTo, "MMDDYYYY");
+                                          db.query("SELECT * FROM `order` INNER JOIN product ON `order`.productId = product.productId WHERE orderNo ='" + resultOrderDetail[i].orderNo + "'", function (err, result, fields) {
+                                                var datefromdata = moment(dateFrom, "MMDDYYYY");
+                                                var datetodata = moment(dateTo, "MMDDYYYY");
 
-                                          if (err) {
-                                                res.json({
-                                                      ResponseCode: "Error",
-                                                      ResponseData: err
-                                                });
-                                          }
-                                          for (var j in result) {
-                                                if (result[j].orderNo == resultOrderDetail[i].orderNo) {
-                                                      orderDetail.push(result[j]);
+                                                if (err) {
+                                                      res.json({
+                                                            ResponseCode: "Error",
+                                                            ResponseData: err
+                                                      });
                                                 }
+                                                for (var j in result) {
+                                                      if (result[j].orderNo == resultOrderDetail[i].orderNo) {
+                                                            orderDetail.push(result[j]);
+                                                      }
+                                                }
+                                                resultOrderDetail[i].order = orderDetail;
+                                                orderDetail = [];
 
-                                          }
-                                          resultOrderDetail[i].order = orderDetail;
-                                          orderDetail = [];
-
-                                          var dateItem = moment(resultOrderDetail[i].date.split(' ')[0], "DDMMYYYY");
-                                          if (dateItem >= datefromdata && dateItem <= datetodata) {
-
-                                                resultReport.push(resultOrderDetail[i]);
-                                                // if (i == resultOrderDetail.length - 1) {
-                                                //       res.json({
-                                                //             ResponseCode: "Success",
-                                                //             ResponseData: { data: resultOrderDetail }
-                                                //       });
-                                                // }
+                                                var dateItem = moment(resultOrderDetail[i].date.split(' ')[0], "DD/MM/YYYY");
+                                                if (dateItem >= datefromdata && dateItem <= datetodata) {
+                                                      resultReport.push(resultOrderDetail[i]);
+                                                }
                                                 if (i == resultOrderDetail.length - 1) {
                                                       res.json({
                                                             ResponseCode: "Success",
                                                             ResponseData: { data: resultReport }
                                                       });
                                                 }
-                                          }
-                                    });
+                                          });
 
+                                    }
+                              } else {
+                                    res.json({
+                                          ResponseCode: "Success",
+                                          ResponseData: { resultOrderDetail }
+                                    });
                               }
 
                         });

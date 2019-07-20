@@ -10,7 +10,8 @@ import { GetHistory } from 'src/app/model/response/get-history';
 import { MAT_DIALOG_DATA } from '@angular/material'
 import * as moment from 'moment';
 import { UtilProvider } from 'src/app/shared/util';
-
+import * as _ from 'lodash';
+import { strict } from 'assert';
 
 @Component({
   selector: 'app-report',
@@ -28,9 +29,10 @@ export class ReportComponent implements OnInit {
   title: string;
   getHistory: GetHistory;
   result: any;
+  summaryReport: any;
   isSearchStock: boolean = false;
   isSearchSale: boolean = false;
-  totalAmount:string;
+  totalAmount: string;
   constructor(
     private dialog: MatDialog,
     public router: Router,
@@ -39,6 +41,7 @@ export class ReportComponent implements OnInit {
     public util: UtilProvider) { }
 
   ngOnInit() {
+    this.summaryReport ={};
     this.userDetail = this.weProvider.GetUserDetail();
     this.dateFromData = new Date();
     this.dateToData = new Date();
@@ -55,16 +58,28 @@ export class ReportComponent implements OnInit {
     dialogConfig.width = "100%";
     this.dialog.open(ReportDataComponent);
   }
-  Print(){
+  Print() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "100%";
-    this.dialog.open(ReportDataComponent,{
-      data:this.result
+    this.dialog.open(ReportDataComponent, {
+      data: this.result
+    });
+  }
+  ShowModal(item) {
+    console.log('showModal')
+
+    this.dialog.open(ReportDataComponent, {
+      width: "100%",
+      height: "100%",
+      panelClass: "modal-popup",
+      data: item
     });
   }
   Search() {
+    this.summaryReport = {};
+
     console.log(this.dateFromData + "," + this.dateToData);
     var dateFrom = moment(this.dateFromData).format("MMDDYYYY");
     var dateTo = moment(this.dateToData).format("MMDDYYYY");
@@ -86,17 +101,49 @@ export class ReportComponent implements OnInit {
         dateTo: dateTo,
         reportType: this.reportType
       }
-
       this.api.SendRequestApi(ConfigApi.Report_url, data).then((res: any) => {
         this.result = res;
+        console.log(this.result);
         if (this.reportType == "2") {
           for (let item of this.result.ResponseData.result) {
-            item.totalAmount = Number.parseFloat(item.quantityItem) * Number.parseFloat(item.itemPrice);
+            console.log(Number.parseFloat(item.quantityItem));
+            if (!isNaN(Number.parseFloat(item.quantityItem))) {
+              item.totalAmount = Number.parseFloat(item.quantityItem) * Number.parseFloat(item.itemPrice);
+            } else {
+              item.totalAmount = '';
+              item.quantityItem = '';
+            }
           }
-        }else{
-          var itemData= 0;
-          for(let item of this.result.ResponseData.data){
-            itemData += item.grandTotal;
+        } else {
+         
+          // this.summaryReport.push({ user: this.result.ResponseData.data[0].user, data: 1, totalAmount: this.result.ResponseData.data[0].grandTotal });
+            
+
+          if (this.result.ResponseData.data.length > 0) {
+              this.summaryReport = _(this.result.ResponseData.data).groupBy('user')
+              .map((v,user)=>({
+                user,
+                data:v
+              })).value();
+
+              for (let item of this.summaryReport) {
+                item.totalAmount = 0;
+                for(let itemDetail of item.data){
+                  item.totalAmount += Number.parseFloat(itemDetail.grandTotal);
+                }
+                
+              }
+
+              // .map((item)=>{
+              //     return _.zipObject(['user'],item);
+              // }).value();
+              console.log(this.summaryReport);
+          }
+
+          
+          var itemData = 0;
+          for (let item of this.result.ResponseData.data) {
+            itemData = item.grandTotal;
           }
 
           this.totalAmount = itemData.toString();
