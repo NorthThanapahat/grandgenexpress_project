@@ -18,13 +18,13 @@
   <form *ngIf="isCustomerInfoEmpty" style="margin-top:20px;" class="center">
     <div class="head-form col-12">Invoice Information - New Invoice</div>
     <div class="form-group row col-12">
-      <label for="itemName" class="col-sm-2 col-form-label"><b>Date*</b></label>
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Date<span class="text-danger">*</span></b></label>
       <div class="col-sm-2">
-        <input type="text" [(ngModel)]="date" name="date" class="form-control" id="date" placeholder="" required>
+        <input type="text" [(ngModel)]="date" (keyup)="ValidateSave()" [ngClass]="{'is-invalid': err.date}" name="date" class="form-control" id="date" placeholder="" required>
       </div>
     </div>
     <div class="form-group row col-12">
-      <label for="itemStatus" class="col-sm-2 col-form-label"><b>COD*</b> </label>
+      <label for="itemStatus" class="col-sm-2 col-form-label"><b>COD<span class="text-danger">*</span></b> </label>
       <div class="col-sm-6">
         <select class="form-control" name="COD" [(ngModel)]="cod"  (change)="CODChange($event.target.value)">
           <option value="yes">Yes</option>
@@ -41,23 +41,23 @@
       </div>
     </div>
     <div class="form-group row col-12">
-      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer Name *</b></label>
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer Name<span class="text-danger">*</span></b></label>
       <div class="col-sm-6">
-        <input type="text" [(ngModel)]="customerName" name="customerName" class="form-control" id="inputPassword"
+        <input type="text" [(ngModel)]="customerName" (keyup)="ValidateSave()" [ngClass]="{'is-invalid': err.customerName}"  name="customerName" class="form-control" id="inputPassword"
           placeholder="" required>
       </div>
     </div>
     <div class="form-group row col-12">
-      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Mobile No. *</b></label>
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Mobile No.<span class="text-danger">*</span></b></label>
       <div class="col-sm-5">
-        <input type="text" [(ngModel)]="customerMobile" name="customerMobile" class="form-control" id="inputPassword"
+        <input type="text" [(ngModel)]="customerMobile" (keyup)="ValidateSave()" [ngClass]="{'is-invalid': err.customerMobile}" name="customerMobile" class="form-control" id="inputPassword"
           placeholder="" required>
       </div>
     </div>
     <div class="form-group row col-12">
-      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Address *</b></label>
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Address<span class="text-danger">*</span></b></label>
       <div class="col-sm-5">
-        <input type="text" [(ngModel)]="customerAddress" name="customerAddress" class="form-control" id="inputPassword"
+        <input type="text" [(ngModel)]="customerAddress" (keyup)="ValidateSave()" [ngClass]="{'is-invalid': err.customerAddress}" name="customerAddress" class="form-control" id="inputPassword"
           placeholder="" required>
       </div>
     </div>
@@ -73,7 +73,7 @@
 </div>
 <div class="container" *ngIf="isCustomerInfoEmpty ">
   <div class="form-group row col-12" *ngIf="userDetail.ResponseData.userRole == 'admin'">
-    <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User*</b> </label>
+    <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User<span class="text-danger">*</span></b> </label>
     <div class="col-sm-6">
       <select class="form-control" name="user" [(ngModel)]="userRef" (change)="ProductOfUser($event.target.value)">
         <option *ngFor="let item of productofUser" [value]="item.username">{{item.username}}</option>
@@ -121,7 +121,7 @@
         <td class="text-center">{{item.itemCode}}</td>
         <td class="text-center">{{item.itemName}}</td>
         <td class="text-center">{{item.itemPrice}}</td>
-        <td class="text-center"><input class="text-center" type=number [(ngModel)]="item.quantity"
+        <td class="text-center"><input class="text-center form-control is-invalid" [ngClass]="{'is-invalid': err.quantity}" type=number [(ngModel)]="item.quantity" 
             (keyup)="QuantityOnChange($event.target.value,item.itemPrice,i)"></td>
         <td class="text-center">{{item.price | number:".2"}}</td>
       </tr>
@@ -225,8 +225,8 @@
     <tbody>
       <tr>
         <td class="text-center">
-          <select class="form-control" name="paymentType" [(ngModel)]="paymentType">
-            <option>Please Select</option>
+          <select class="form-control" [ngClass]="{'is-invalid': err.paymentType}" (change)="ValidateSave()" name="paymentType" [(ngModel)]="paymentType">
+            <option disabled>Please Select</option>
             <option>BANK TRANSFER</option>
             <option>CASH</option>
             <option>CONSIGNMENT</option>

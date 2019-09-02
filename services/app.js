@@ -293,6 +293,7 @@ app.post('/orderDetail', (req, res) => {
       var shippingFee = req.body.shippingFee;
       var customerId = req.body.customerId;
       var createBy = req.body.createBy;
+      var customerRefNo = req.body.customerRefNo;
       var status = "Waiting for shipment"
       ConnectDB();
       let date = moment().tz("Asia/Bangkok").format('DD/MM/YYYY HH:mm:ss');
@@ -307,7 +308,7 @@ app.post('/orderDetail', (req, res) => {
 
             if (result.affectedRows > 0) {
                   var paymentDate = moment().tz("Asia/Bangkok").format('DD/MM/YYYY HH:mm:ss');
-                  db.query(`INSERT INTO payment (orderNo,paymentType,paymentImage,amount,paymentDate,cod,codCost,addCharge,discount,additionalCost,shippingFee,user,status,createBy) VALUES ('` + orderNo + `','` + payment.paymentType + `','` + payment.paymentImage + `','` + payment.amount + `','` + paymentDate + `','` + cod + `','` + codCost + `','` + addCharge + `','` + discount + `','` + additionalCost + `','` + shippingFee + `','` + username + `','` + status + `','` + createBy + `')`, function (err, result, fields) {
+                  db.query(`INSERT INTO payment (orderNo,paymentType,paymentImage,amount,paymentDate,cod,codCost,addCharge,discount,additionalCost,shippingFee,user,status,createBy,customerRefNo) VALUES ('` + orderNo + `','` + payment.paymentType + `','` + payment.paymentImage + `','` + payment.amount + `','` + paymentDate + `','` + cod + `','` + codCost + `','` + addCharge + `','` + discount + `','` + additionalCost + `','` + shippingFee + `','` + username + `','` + status + `','` + createBy + `','`+ customerRefNo+`')`, function (err, result, fields) {
                         if (err) {
                               res.json({
                                     ResponseCode: "Error",
@@ -594,11 +595,11 @@ app.post('/EditProduct', (req, res) => {
       var itemPrice = req.body.itemPrice;
       var userRef = req.body.userRef;
       var productID = req.body.productID;
-
+      var quantity = req.body.quantity;
       var detailModify = moment().tz("Asia/Bangkok").format('DD/MM/YYYY HH:mm:ss');
 
       ConnectDB();
-      db.query("UPDATE product SET itemName = '" + itemName + "',itemCode = '" + itemCode + "',itemStatus ='" + itemStatus + "',itemPrice = '" + itemPrice + "', productInUser ='" + userRef + "' WHERE productID = '" + productID + "'", function (err, result, fields) {
+      db.query("UPDATE product SET 	quantityItem = '" + quantity +"',itemName = '" + itemName + "',itemCode = '" + itemCode + "',itemStatus ='" + itemStatus + "',itemPrice = '" + itemPrice+ "',productInUser ='" + userRef + "' WHERE productID = '" + productID + "'", function (err, result, fields) {
             if (err) throw err;
             // GetResAuth(res, result, fields);
             if (result == [] || result == null || result == 'undefined') {
@@ -610,7 +611,7 @@ app.post('/EditProduct', (req, res) => {
                   if (result.affectedRows > 0) {
                         res.json({
                               ResponseCode: "Success",
-                              ResponseData: { username, itemCode, itemName, itemStatus, itemPrice, detailModify, userRef }
+                              ResponseData: { username, itemCode, itemName, itemStatus, itemPrice,quantity, detailModify, userRef }
                         });
                   }
             }

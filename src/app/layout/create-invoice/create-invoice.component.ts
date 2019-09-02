@@ -59,6 +59,17 @@ export class CreateInvoiceComponent implements OnInit {
   orderNoSave: string;
   error: boolean = false;
   Remark: string = '';
+  err = {
+    isErr: false,
+    date: false,
+    customerName: false,
+    customerMobileNo: false,
+    customerAddress: false,
+    user: false,
+    quantity: false,
+    paymentType: false,
+    noProduct: false
+  }
   orderDetail: OrderDetailSave = new OrderDetailSave();
   constructor(
     private dialog: MatDialog,
@@ -68,7 +79,7 @@ export class CreateInvoiceComponent implements OnInit {
     public util: UtilProvider) { }
 
   ngOnInit() {
-  
+    this.SetData();
     this.addCharges = 0;
     this.codCost = 0;
     this.Total = 0;
@@ -97,10 +108,11 @@ export class CreateInvoiceComponent implements OnInit {
   CODChange(value) {
     if (value == "yes") {
       this.isCOD = true;
-      this.codCost = this.totalPrice *0.03;
+      this.SUMTotal();
     } else {
       this.isCOD = false;
-      this.codCost = 0;
+
+      this.SUMTotal();
     }
   }
   processFile(value) {
@@ -118,13 +130,23 @@ export class CreateInvoiceComponent implements OnInit {
   }
 
   SUMTotal() {
-    this.codCost = this.totalPrice * 0.03;
-    let total =  this.totalPrice - this.discount + this.addCharges + this.codCost + this.additionalCost + this.shipping;
+    if (this.isCOD)
+      this.codCost = (this.totalPrice - this.discount) * 0.03;
+    else
+      this.codCost = 0;
+    let total = this.totalPrice - this.discount + this.addCharges - this.codCost - this.additionalCost - this.shipping;
     this.different = "-" + total.toString();
-  
+
     return total;
   }
-
+  SetData() {
+    this.date = ''
+    this.customerName = ''
+    this.customerAddress = ''
+    this.customerMobile = ''
+    this.totalQuantity = 0;
+    this.paymentType = 'Please Select'
+  }
   readThis(inputValue: any): void {
     var file: File = inputValue.files[0];
     var myReader: FileReader = new FileReader();
@@ -203,6 +225,7 @@ export class CreateInvoiceComponent implements OnInit {
   GetProductInquiry(data) {
     this.priceList = [];
     this.api.ProductInquiry(data).then((res: any) => {
+      console.log(res)
       this.product = <Product>res;
       if (this.product.ResponseData.length == 0) {
         const dialogConfig = new MatDialogConfig();
@@ -213,21 +236,23 @@ export class CreateInvoiceComponent implements OnInit {
         dialogConfig.panelClass = "popup-modal"
         if (this.userDetail.ResponseData.userRole != 'admin') {
           dialogConfig.data = { title: "Error", text: "No Product Data , Please Contact admin" };
+          const dialogRef = this.dialog.open(AlertMessageComponent, dialogConfig);
+
+          dialogRef.afterClosed().subscribe(result => {
+            if (this.userDetail.ResponseData.userRole == 'admin') {
+              this.router.navigate(['/create-product'], { queryParams: { type: "new" } });
+            } else {
+              this.router.navigate(['/dashboard']);
+  
+            }
+            console.log('The dialog was closed');
+          });
         } else {
-          dialogConfig.data = { title: "Error", text: "Please add product before creating invoice." };
+          this.err.noProduct = true;
+          this.err.isErr = true;
         }
 
-        const dialogRef = this.dialog.open(AlertMessageComponent, dialogConfig);
-
-        dialogRef.afterClosed().subscribe(result => {
-          if (this.userDetail.ResponseData.userRole == 'admin') {
-            this.router.navigate(['/create-product'], { queryParams: { type: "new" } });
-          } else {
-            this.router.navigate(['/dashboard']);
-
-          }
-          console.log('The dialog was closed');
-        });
+      
       } else {
         for (let item of this.product.ResponseData) {
           item.quantity = "0";
@@ -262,7 +287,7 @@ export class CreateInvoiceComponent implements OnInit {
     console.log(this.addCharges);
     if (this.discount != undefined && this.addCharges != undefined) {
       this.Total = this.SUMTotal();
-      
+
       console.log('this.discount != undefined && this.addCharges != undefined');
     } else if (this.discount != undefined) {
       console.log('(this.discount != undefined');
@@ -275,56 +300,103 @@ export class CreateInvoiceComponent implements OnInit {
       this.Total = this.SUMTotal();
     }
 
-    if (this.isCOD){
-      this.codCost = this.totalPrice * 0.03;
-    }else{
-      this.codCost = 0;
-    }
+
     this.different = "-" + this.Total.toString();
     console.log(this.totalQuantity)
     console.log(this.totalPrice)
+    if (this.totalQuantity != 0) {
+      this.err.quantity = false;
+    }
   }
   Validate() {
     return true;
   }
 
   save() {
+    if (this.date == '') {
+      this.err.date = true;
+      this.err.isErr = true;
+    }
+    if (this.customerName == '') {
+      this.err.customerName = true;
+      this.err.isErr = true;
+    }
+    if (this.customerAddress == '') {
+      this.err.customerAddress = true;
+      this.err.isErr = true;
+    }
+    if (this.customerMobile == '') {
+      this.err.customerMobileNo = true;
+      this.err.isErr = true;
+    }
+    if (this.totalQuantity == 0) {
+      this.err.quantity = true;
+      this.err.isErr = true;
+    }
+    if (this.paymentType == 'Please Select') {
+      this.err.paymentType = true;
+      this.err.isErr = true;
+    }
+    if (this.err.noProduct) {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.width = "70%";
+      dialogConfig.maxWidth = "70%";
+      dialogConfig.panelClass = "popup-modal"
+      dialogConfig.data = { title: "Error", text: "Please add product before creating invoice." };
 
-    console.log(this.addCharges);
-    if (this.isCustomerEmpty) {
-      if (this.userDetail.ResponseData.userRole == "admin") {
-        var username = this.userRef;
-      } else if (this.userDetail.ResponseData.userRole == "shop") {
-        var username = this.userDetail.ResponseData.username;
-      } else if (this.userDetail.ResponseData.userRole == "cashier") {
-        var username = this.userDetail.ResponseData.userRef;
-      }
-      let data = {
-        customerName: this.customerName,
-        customerAddress: this.customerAddress,
-        customerEmail: this.customerEmail,
-        customerMobile: this.customerMobile,
-        customerOfUser: username
-      }
-      console.log("req createcustomer ==>", data);
-      this.api.SendRequestApi(ConfigApi.CreateCustomer_url, data).then((res: any) => {
-        this.customerSave = <SearchCustomer>res;
-        if (this.customerSave.ResponseCode == "Success") {
-          this.saveMethod(username, this.customerSave.ResponseData[0].customerId);
+      const dialogRef = this.dialog.open(AlertMessageComponent, dialogConfig);
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (this.userDetail.ResponseData.userRole == 'admin') {
+          this.router.navigate(['/create-product'], { queryParams: { type: "new" } });
+        } else {
+          this.router.navigate(['/dashboard']);
         }
+        console.log('The dialog was closed');
       });
-    } else {
-      let usernameSave = '';
-      if (this.userDetail.ResponseData.userRole == "admin") {
-        usernameSave = this.userRef;
-      } else if (this.userDetail.ResponseData.userRole == "shop") {
-        usernameSave = this.userDetail.ResponseData.username;
-      } else if (this.userDetail.ResponseData.userRole == "cashier") {
-        usernameSave = this.userDetail.ResponseData.userRef;
-      }
-      console.log("usernameSave:", usernameSave);
+    }
+    console.log(this.err)
+    if (!this.err.isErr) {
 
-      this.saveMethod(usernameSave, this.customer.ResponseData[0].customerId);
+
+      console.log(this.addCharges);
+      if (this.isCustomerEmpty) {
+        if (this.userDetail.ResponseData.userRole == "admin") {
+          var username = this.userRef;
+        } else if (this.userDetail.ResponseData.userRole == "shop") {
+          var username = this.userDetail.ResponseData.username;
+        } else if (this.userDetail.ResponseData.userRole == "cashier") {
+          var username = this.userDetail.ResponseData.userRef;
+        }
+        let data = {
+          customerName: this.customerName,
+          customerAddress: this.customerAddress,
+          customerEmail: this.customerEmail,
+          customerMobile: this.customerMobile,
+          customerOfUser: username
+        }
+        console.log("req createcustomer ==>", data);
+        this.api.SendRequestApi(ConfigApi.CreateCustomer_url, data).then((res: any) => {
+          this.customerSave = <SearchCustomer>res;
+          if (this.customerSave.ResponseCode == "Success") {
+            this.saveMethod(username, this.customerSave.ResponseData[0].customerId);
+          }
+        });
+      } else {
+        let usernameSave = '';
+        if (this.userDetail.ResponseData.userRole == "admin") {
+          usernameSave = this.userRef;
+        } else if (this.userDetail.ResponseData.userRole == "shop") {
+          usernameSave = this.userDetail.ResponseData.username;
+        } else if (this.userDetail.ResponseData.userRole == "cashier") {
+          usernameSave = this.userDetail.ResponseData.userRef;
+        }
+        console.log("usernameSave:", usernameSave);
+
+        this.saveMethod(usernameSave, this.customer.ResponseData[0].customerId);
+      }
     }
   }
 
@@ -353,12 +425,13 @@ export class CreateInvoiceComponent implements OnInit {
         this.orderDetail.username = username;
         this.orderDetail.createBy = this.userDetail.ResponseData.username;
         this.orderDetail.cod = cod;
-        this.orderDetail.addCharge = this.addCharges+"";
-        this.orderDetail.discount = this.discount+"";
-        this.orderDetail.additionalCost = this.additionalCost+"";
-        this.orderDetail.shippingFee = this.shipping+"";
+        this.orderDetail.addCharge = this.addCharges + "";
+        this.orderDetail.discount = this.discount + "";
+        this.orderDetail.additionalCost = this.additionalCost + "";
+        this.orderDetail.shippingFee = this.shipping + "";
         this.orderDetail.codCost = this.codCost + "";
         this.orderDetail.customerId = customerId;
+        this.orderDetail.customerRefNo = this.customerRefNo;
         this.orderDetail.orderDetail = new OrderDetail();
         this.orderDetail.orderDetail.addCharge = this.addCharges + "";
         this.orderDetail.orderDetail.discount = this.discount + "";

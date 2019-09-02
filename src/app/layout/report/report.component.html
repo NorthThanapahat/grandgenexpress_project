@@ -1,10 +1,15 @@
 <div class="container">
   <mat-card>
-    <select class="form-control col-12 col-md-5" name="ReportType" [(ngModel)]="reportType"
+    <select class="form-control col-12 col-md-5 float-left" name="ReportType" [(ngModel)]="reportType"
       (change)="ReportTypeSelect($event.target.value)">
       <option value="1">Daily Sale Report</option>
       <option value="2">Daily Stock Report</option>
     </select>
+    <select  class="form-control col-12 col-md-5 offset-md-2 float-left" name="view" [(ngModel)]="shopSelect"
+      (change)="ViewSelect($event.target.value)">
+      <option *ngFor="let item of shopData">{{item.username}}</option>
+    </select>
+    <div class="clearfix"></div>
     <div>
 
 
@@ -25,8 +30,7 @@
 
 
 
-      <select *ngIf="reportType == '1'" class="form-control col-12 col-md-5" name="view" [(ngModel)]="view"
-        (change)="ViewSelect($event.target.value)">
+      <select *ngIf="reportType == '1'" class="form-control col-12 col-md-5" name="view" [(ngModel)]="view">
         <option value="1">Detail</option>
         <option value="2">Summary</option>
       </select>
@@ -55,7 +59,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of result?.ResponseData.result;let i = index">
+        <tr *ngFor="let item of resultFilter;let i = index">
           <th scope="row">{{i+1}}</th>
           <td>{{item.productInUser}}</td>
           <td>{{item.itemName}}</td>
@@ -83,11 +87,12 @@
           <th scope="col">Customer Name</th>
           <th scope="col">Customer Mobile</th>
           <th scope="col">Invoice Amount</th>
+          <th scope="col">Ref No. / CB No.</th>
           <th scope="col">Submit By</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of result?.ResponseData.data;let i = index" class="link" (click)="ShowModal(item)">
+        <tr *ngFor="let item of resultFilter;let i = index" class="link" (click)="ShowModal(item)">
           <th scope="row">{{i+1}}</th>
           <td>{{item.user}}</td>
           <td>{{item.date}}</td>
@@ -96,10 +101,11 @@
           <td>{{item.customerName}}</td>
           <td>{{item.customerTel}}</td>
           <td>{{item.grandTotal |  number:'.2'}}</td>
+          <td>{{item.customerRefNo}}</td>
           <td>{{item.createBy}}</td>
 
         </tr>
-        <tr *ngIf="result?.ResponseData.data.length == 0">
+        <tr *ngIf="resultFilter.length == 0">
           <td class="text-center" colspan="9">
             ไม่พบข้อมูล
           </td>

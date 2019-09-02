@@ -10,6 +10,7 @@ export class OrderDetailSave{
     addCharge:string;
     discount:string;
     additionalCost:string;
+    customerRefNo:string;
     shippingFee:string;
 }
 

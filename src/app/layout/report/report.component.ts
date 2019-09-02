@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { UtilProvider } from 'src/app/shared/util';
 import * as _ from 'lodash';
 import { strict } from 'assert';
+import { UserManageMent } from 'src/app/model/response/user_manage';
 
 @Component({
   selector: 'app-report',
@@ -32,7 +33,10 @@ export class ReportComponent implements OnInit {
   summaryReport: any;
   isSearchStock: boolean = false;
   isSearchSale: boolean = false;
+  shopData: Array<any>;
   totalAmount: string;
+  resultFilter: Array<any>;
+  shopSelect: string;
   constructor(
     private dialog: MatDialog,
     public router: Router,
@@ -41,12 +45,34 @@ export class ReportComponent implements OnInit {
     public util: UtilProvider) { }
 
   ngOnInit() {
-    this.summaryReport ={};
+    this.shopData = [];
+    this.resultFilter = [];
+    this.summaryReport = {};
     this.userDetail = this.weProvider.GetUserDetail();
     this.dateFromData = new Date();
     this.dateToData = new Date();
     this.reportType = '1';
     this.view = '1';
+    console.log(this.userDetail);
+    let data = {
+      "username": this.userDetail.ResponseData.username
+    }
+    this.GetUserManageMent(data);
+  }
+  GetUserManageMent(data) {
+    this.shopData = [];
+    this.shopSelect = 'All';
+    this.api.UserManageMent(data).then(async (result: any) => {
+      this.shopData.push({ username: 'All' });
+      for (let item of result.ResponseData) {
+        if (item.userRole == 'shop') {
+          this.shopData.push(item);
+        }
+
+      }
+
+
+    });
   }
   ReportTypeSelect(value) {
     console.log(value);
@@ -79,7 +105,7 @@ export class ReportComponent implements OnInit {
   }
   Search() {
     this.summaryReport = {};
-
+    this.resultFilter = [];
     console.log(this.dateFromData + "," + this.dateToData);
     var dateFrom = moment(this.dateFromData).format("MMDDYYYY");
     var dateTo = moment(this.dateToData).format("MMDDYYYY");
@@ -102,10 +128,14 @@ export class ReportComponent implements OnInit {
         reportType: this.reportType
       }
       this.api.SendRequestApi(ConfigApi.Report_url, data).then((res: any) => {
+
         this.result = res;
         console.log(this.result);
         if (this.reportType == "2") {
+          this.resultFilter = res.ResponseData.result;
+
           for (let item of this.result.ResponseData.result) {
+
             console.log(Number.parseFloat(item.quantityItem));
             if (!isNaN(Number.parseFloat(item.quantityItem))) {
               item.totalAmount = Number.parseFloat(item.quantityItem) * Number.parseFloat(item.itemPrice);
@@ -115,32 +145,20 @@ export class ReportComponent implements OnInit {
             }
           }
         } else {
-         
-          // this.summaryReport.push({ user: this.result.ResponseData.data[0].user, data: 1, totalAmount: this.result.ResponseData.data[0].grandTotal });
-            
 
-          if (this.result.ResponseData.data.length > 0) {
-              this.summaryReport = _(this.result.ResponseData.data).groupBy('user')
-              .map((v,user)=>({
-                user,
-                data:v
-              })).value();
-
-              for (let item of this.summaryReport) {
-                item.totalAmount = 0;
-                for(let itemDetail of item.data){
-                  item.totalAmount += Number.parseFloat(itemDetail.grandTotal);
-                }
-                
-              }
-
-              // .map((item)=>{
-              //     return _.zipObject(['user'],item);
-              // }).value();
-              console.log(this.summaryReport);
+          this.resultFilter = res.ResponseData.data;
+          if (this.shopSelect != 'All') {
+            console.log(this.shopSelect)
+            this.resultFilter = this.resultFilter.filter((item: any) => {
+              return item.customerOfUser.trim().indexOf(this.shopSelect.trim()) > -1;
+            });
           }
 
-          
+          if (this.result.ResponseData.data.length > 0) {
+            this.GroupSummary();
+          }
+
+
           var itemData = 0;
           for (let item of this.result.ResponseData.data) {
             itemData = item.grandTotal;
@@ -157,7 +175,21 @@ export class ReportComponent implements OnInit {
     }
 
   }
+  GroupSummary() {
+    this.summaryReport = _(this.resultFilter).groupBy('user')
+      .map((v, user) => ({
+        user,
+        data: v
+      })).value();
 
+    for (let item of this.summaryReport) {
+      item.totalAmount = 0;
+      for (let itemDetail of item.data) {
+        item.totalAmount += Number.parseFloat(itemDetail.grandTotal);
+      }
+    }
+    console.log(this.summaryReport)
+  }
   onDate(event): void {
     console.log(event);
   }
@@ -169,7 +201,30 @@ export class ReportComponent implements OnInit {
     this.isSearchStock = false;
     this.isSearchSale = false;
   }
-  ViewSelect() {
+  ViewSelect(value) {
+    console.log(value)
+    if (value == 'All') {
+      if (this.reportType == '1') {
+        this.resultFilter = this.result.ResponseData.data;
+
+      } else if (this.reportType == '2') {
+        this.resultFilter = this.result.ResponseData.result;
+      }
+    }
+    else {
+      if (this.reportType == '1') {
+        this.resultFilter = this.result.ResponseData.data;
+
+      } else if (this.reportType == '2') {
+        this.resultFilter = this.result.ResponseData.result;
+      }
+      this.resultFilter = this.resultFilter.filter((item: any) => {
+        return item.customerOfUser.trim().indexOf(this.shopSelect.trim()) > -1;
+      });
+
+    }
+    this.GroupSummary();
 
   }
 }
+

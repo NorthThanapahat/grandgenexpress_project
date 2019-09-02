@@ -34,6 +34,7 @@ export class DataInvoiceDetails{
     customerAddress:string;
     customerEmail:string;
     customerOfUser:string;
+    customerRefNo:string;
     createBy:string;
     order:Order;
 }

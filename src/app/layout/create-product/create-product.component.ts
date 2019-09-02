@@ -47,6 +47,7 @@ export class CreateProductComponent implements OnInit {
         this.itemName = this.product.itemName;
         this.itemPrice = this.product.itemPrice;
         this.userRef = this.product.productInUser;
+        this.quantity = this.product.quantityItem;
       }
       console.log("type ====> ",param);
       if(this.type == "new"){
@@ -122,6 +123,7 @@ export class CreateProductComponent implements OnInit {
         itemName:this.itemName,
         itemPrice:this.itemPrice,
         userRef:this.userRef,
+        quantity:this.quantity,
         productID:this.product.productId
       }
       this.api.SendRequestApi(ConfigApi.editProduct_url,data).then(res =>{
