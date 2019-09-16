@@ -221,7 +221,7 @@
         </td>
 
         <td class="text-center">
-          <input class="text-center" type=number [(ngModel)]="amount" disabled>
+          <input class="text-center" type=number [(ngModel)]="data.amount" [ngClass]="{'is-invalid': err.amount}" (change)="SUMTotal()">
         </td>
       </tr>
       <tr>
@@ -235,7 +235,7 @@
         <td class="text-center"></td>
         <td class="text-right">Paid Amount</td>
         <td class="text-center">
-          {{amount | number:".2"}}
+          {{data.amount | number:".2"}}
         </td>
       </tr>
       <tr>

@@ -20,8 +20,8 @@ export class ManageInvoiceComponent implements OnInit {
   userManage: UserManageMent;
   productofUser: Array<UserData> = [];
   inquiryOrder: inquiryOrder;
-  statusInvoice:string;
-
+  statusInvoice: string;
+  userSelect: string;
   userRef: string;
   constructor(
     private dialog: MatDialog,
@@ -42,14 +42,15 @@ export class ManageInvoiceComponent implements OnInit {
       this.GetUserManageMent(data);
     }
   }
-  StatusInvoice(value,item,i){
+  StatusInvoice(value, item, i) {
     this.inquiryOrder.ResponseData.data[i].status = value;
   }
   UserOption(value) {
+    this.userSelect = value;
     let data = {
       username: value
     }
-  this.GetInvoice(data);
+    this.GetInvoice(data);
   }
   Print(item) {
     this.dialog.open(ReportDataComponent, {
@@ -58,46 +59,60 @@ export class ManageInvoiceComponent implements OnInit {
       panelClass: "modal-popup",
       data: item
     });
-   
+
   }
-  Edit(item){
-    
-    this.dialog.open(EditInvoiceComponent, {
+  Edit(item) {
+
+    let dialogRef = this.dialog.open(EditInvoiceComponent, {
       width: "80%",
       height: "80%",
       panelClass: "modal-normal",
       data: item
     });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (this.userDetail.ResponseData.userRole == 'admin') {
+        this.userRef = this.userSelect;
+        let data = {
+          username: this.userRef
+        }
+        this.GetInvoice(data);
+      } else {
+       
+      }
+      console.log('The dialog was closed');
+    });
   }
-  GetInvoice(data){
+  GetInvoice(data) {
     this.api.SendRequestApi(ConfigApi.InquiryOrder_url, data).then((res: any) => {
       this.inquiryOrder = <inquiryOrder>res;
-      
+
       console.log(this.inquiryOrder);
     });
   }
-  save(){
+  save() {
 
-    for(let i in this.inquiryOrder.ResponseData.data){
+    for (let i in this.inquiryOrder.ResponseData.data) {
       // let i = 0;
       console.log(this.inquiryOrder.ResponseData.data[i]);
       let data = {
-        username:this.userRef,
-        orderNo:this.inquiryOrder.ResponseData.data[i].orderNo,
-        status:this.inquiryOrder.ResponseData.data[i].status,
-        orderDetail:{
-            order:this.inquiryOrder.ResponseData.data[i].order,
-            grandTotal:this.inquiryOrder.ResponseData.data[i].grandTotal        }
-        
+        username: this.userRef,
+        orderNo: this.inquiryOrder.ResponseData.data[i].orderNo,
+        status: this.inquiryOrder.ResponseData.data[i].status,
+        orderDetail: {
+          order: this.inquiryOrder.ResponseData.data[i].order,
+          grandTotal: this.inquiryOrder.ResponseData.data[i].grandTotal
+        }
+
       }
-      this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url,data).then((res:any)=>{
-        if(res.ResponseCode == "Success"){
+      this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
+        if (res.ResponseCode == "Success") {
           window.location.reload();
         }
       });
     }
 
-    }
+  }
   GetUserManageMent(data) {
     this.api.SendRequestApi(ConfigApi.userManageMent_url, data).then(async (result: any) => {
       this.userManage = <UserManageMent>result;
@@ -107,6 +122,7 @@ export class ManageInvoiceComponent implements OnInit {
         }
       }
       this.userRef = this.productofUser[0].username;
+      this.userSelect = this.userRef;
       let data = {
         username: this.userRef
       }
