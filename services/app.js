@@ -430,7 +430,7 @@ app.post('/InquiryOrder', (req, res) => {
       ConnectDB();
 
 
-      db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId WHERE order_total.user = '" + username + "' AND payment.status != 'Paid'", function (err, resultOrderDetail, fields) {
+      db.query("SELECT * FROM order_total INNER JOIN payment ON payment.orderNo = order_total.orderNo INNER JOIN customer ON order_total.customerId = customer.customerId WHERE order_total.user = '" + username + "' AND payment.status != 'Paid' AND payment.status != 'Cancelled order'", function (err, resultOrderDetail, fields) {
             if (err) {
                   res.json({
                         ResponseCode: "Error",

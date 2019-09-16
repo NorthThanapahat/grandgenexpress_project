@@ -84,15 +84,7 @@ export class ReportComponent implements OnInit {
     dialogConfig.width = "100%";
     this.dialog.open(ReportDataComponent);
   }
-  Print() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = "100%";
-    this.dialog.open(ReportDataComponent, {
-      data: this.result
-    });
-  }
+ 
   ShowModal(item) {
     console.log('showModal')
 

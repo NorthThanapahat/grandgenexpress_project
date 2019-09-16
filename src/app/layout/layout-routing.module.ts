@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { ReportDataComponent } from '../report-data/report-data.component';
 
 const routes: Routes = [
     {

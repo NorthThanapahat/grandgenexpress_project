@@ -18,7 +18,17 @@ export class ReportDataComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+  }
+  
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    setTimeout(()=>{
+      window.print();
 
+    },1000)
+    
   }
   Close(){
     this.dialogRef.close();

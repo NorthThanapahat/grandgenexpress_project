@@ -9,7 +9,7 @@ import { UserManageMent, UserData } from 'src/app/model/response/user_manage';
 import { Product } from 'src/app/model/response/product';
 import { OrderSave, OrderProductData } from 'src/app/model/request/orderSave';
 import { OrderDetailSave, OrderDetail, Payment } from 'src/app/model/request/orderDetailSave';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 
 import { ReportDataComponent } from 'src/app/report-data/report-data.component';
@@ -59,6 +59,7 @@ export class CreateInvoiceComponent implements OnInit {
   orderNoSave: string;
   error: boolean = false;
   Remark: string = '';
+  data: any;
   err = {
     isErr: false,
     date: false,
@@ -75,10 +76,12 @@ export class CreateInvoiceComponent implements OnInit {
     private dialog: MatDialog,
     public router: Router,
     public api: ApiProvider,
+    private route: ActivatedRoute,
     public weProvider: WeDataProvider,
     public util: UtilProvider) { }
 
   ngOnInit() {
+    
     this.SetData();
     this.addCharges = 0;
     this.codCost = 0;
@@ -254,6 +257,8 @@ export class CreateInvoiceComponent implements OnInit {
 
       
       } else {
+        this.err.noProduct = false;
+        this.err.isErr = false;
         for (let item of this.product.ResponseData) {
           item.quantity = "0";
         }
@@ -399,7 +404,33 @@ export class CreateInvoiceComponent implements OnInit {
       }
     }
   }
-
+   ValidateSave(){
+    if (this.date != '') {
+      this.err.date = false;
+      this.err.isErr = false;
+    }
+    if (this.customerName != '') {
+      this.err.customerName = false;
+      this.err.isErr = false;
+    }
+    if (this.customerAddress != '') {
+      this.err.customerAddress = false;
+      this.err.isErr = false;
+    }
+    if (this.customerMobile != '') {
+      this.err.customerMobileNo = false;
+      this.err.isErr = false;
+    }
+    if (this.totalQuantity != 0) {
+      this.err.quantity = false;
+      this.err.isErr = false;
+    }
+    if (this.paymentType != 'Please Select') {
+      this.err.paymentType = false;
+      this.err.isErr = false;
+    }
+    
+  }
   private saveMethod(username: string, customerId: string) {
     let orderSave = [];
 

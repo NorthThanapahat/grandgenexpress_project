@@ -1,5 +1,5 @@
 <div class="w-100 relative">
-        <div class="ab top-right link padding" style="z-index: 9999;" (click)="Close()">
+        <div class="ab top-right link padding hidePrint" style="z-index: 9999;" (click)="Close()">
                 <i class="fa fa-times"></i>
         </div>
         <div *ngIf="data.status == 'Paid'">
@@ -29,6 +29,9 @@
                                         </div>
                                         <div>
                                                 <b>Customer Address :</b> {{data.customerAddress}}
+                                        </div>
+                                        <div>
+                                                <b>Customer Phone Number :</b> {{data.customerTel}}
                                         </div>
                                 </div>
                                 <div class="clearfix"></div>
@@ -64,6 +67,10 @@
                                                 </tr>
                                         </thead>
                                         <tbody>
+                                                <tr *ngIf="data.order.length == 0">
+                                                        <td class="text-center text-danger font-size-20" colspan="5">ไม่มีข้อมูลสินค้า</td>
+                                                        
+                                                </tr>
                                                 <tr *ngFor="let item of data.order;let i = index;">
                                                         <td>{{i+1}}</td>
                                                         <td>{{item.itemName}}</td>
@@ -78,21 +85,21 @@
                                                         <td><b>Total Qty</b></td>
                                                         <td>{{data.totalQuantity | number:'.2'}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td><b>SubTotal</b></td>
                                                         <td>{{data.totalCharge | number:'.2'}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td>Additional Charges </td>
                                                         <td>{{data.addCharge | number:'.2'}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -100,7 +107,7 @@
                                                         <td>{{data.discount | number:'.2'}}</td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -108,21 +115,21 @@
                                                         <td>{{data.additionalCost | number:'.2'}}</td>
                                                 </tr>
                                                 <tr
-                                                        *ngIf="data.codCost != '0' || data.codCost != undefined || data.codCost != '' || data.codCost != null">
+                                                        *ngIf="(data.codCost != '0' || data.codCost != undefined || data.codCost != '' || data.codCost != null) && data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td>COD</td>
                                                         <td>{{data.codCost | number:'.2'}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td>Shipping Fee</td>
                                                         <td>{{data.shippingFee | number:'.2'}}</td>
                                                 </tr>
-                                                <tr>
+                                                <tr *ngIf="data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -134,7 +141,8 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td><b>Total</b></td>
-                                                        <td>{{data.grandTotal | number:'.2'}}</td>
+                                                        <td *ngIf="data.status == 'Paid'">{{data.grandTotal | number:'.2'}}</td>
+                                                        <td *ngIf="data.status != 'Paid'">{{data.totalCharge | number:'.2'}}</td>
                                                 </tr>
                                         </tbody>
                                 </table>

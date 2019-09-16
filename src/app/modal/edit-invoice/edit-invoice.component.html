@@ -1,0 +1,254 @@
+<div class="container">
+
+  <form style="margin-top:20px;" class="center">
+    <div class="head-form col-12">Invoice Information - New Invoice</div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Date<span class="text-danger">*</span></b></label>
+      <div class="col-sm-2">
+        <input type="text" [(ngModel)]="data.orderDate" disabled [ngClass]="{'is-invalid': err.date}" name="date"
+          class="form-control" id="date" placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemStatus" class="col-sm-2 col-form-label"><b>COD<span class="text-danger">*</span></b> </label>
+      <div class="col-sm-6">
+        <div *ngIf="data.cod == 1">yes</div>
+        <div *ngIf="data.cod == 2">no</div>
+      </div>
+    </div>
+
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Ref No. / CB No.</b></label>
+      <div class="col-sm-6">
+        <input type="text" [(ngModel)]="data.customerRefNo" disabled name="customerRefNo" class="form-control"
+          id="inputPassword" placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-2 col-form-label"><b>Customer Name<span
+            class="text-danger">*</span></b></label>
+      <div class="col-sm-6">
+        <input type="text" [(ngModel)]="data.customerName" disabled [ngClass]="{'is-invalid': err.customerName}"
+          name="customerName" class="form-control" id="inputPassword" placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Mobile No.<span
+            class="text-danger">*</span></b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="data.customerTel" disabled [ngClass]="{'is-invalid': err.customerMobile}"
+          name="customerMobile" class="form-control" id="inputPassword" placeholder="" required>
+      </div>
+    </div>
+    <div class="form-group row col-12">
+      <label for="itemName" class="col-sm-3 col-form-label"><b>Customer Address<span
+            class="text-danger">*</span></b></label>
+      <div class="col-sm-5">
+        <input type="text" [(ngModel)]="data.customerAddress" disabled [ngClass]="{'is-invalid': err.customerAddress}"
+          name="customerAddress" class="form-control" id="inputPassword" placeholder="" required>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="container">
+  <div class="form-group row col-12">
+    <label for="itemUserRef" class="col-sm-2 col-form-label"><b>User<span class="text-danger">*</span></b> </label>
+    <div class="col-sm-6">
+      <input type="text" [(ngModel)]="data.user" disabled [ngClass]="{'is-invalid': err.customerAddress}"
+        name="customerAddress" class="form-control" id="inputPassword" placeholder="" required>
+    </div>
+  </div>
+</div>
+<div class="container table-responsive">
+  <div class="head-form col-12">Order Details</div>
+  <table style="margin-top:10px;" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td class="text-center">
+          <div>
+            Item Code
+
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Item Name
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Unit Price (THB)
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Quantity
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Total Price
+          </div>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data.order; let i = index; ">
+        <td class="text-center">{{item.itemCode}}</td>
+        <td class="text-center">{{item.itemName}}</td>
+        <td class="text-center">{{item.itemPrice}}</td>
+        <td class="text-center"><input class="text-center form-control is-invalid"
+            [ngClass]="{'is-invalid': err.quantity}" type=number [(ngModel)]="item.quantity"
+            (keyup)="QuantityOnChange($event.target.value,item.itemPrice,i)"></td>
+        <td class="text-center">{{item.totalPrice | number:".2"}}</td>
+      </tr>
+      <tr *ngIf='data.order.length == 0'>
+        <td class="text-center text-danger font-18" colspan="5">ไม่มีข้อมูลสินค้า</td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Order Charges (THB)</td>
+        <td class="text-center">{{data.totalCharge | number:".2"}}</td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Additional Charges ( +/- ) (THB)</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="data.addCharge" (change)="SUMTotal()">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Discount ( - ) (THB)</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="data.discount" (change)="SUMTotal()">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Total Quantity</td>
+        <td class="text-center">
+          {{data.totalQuantity}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">COD</td>
+        <td class="text-center">
+          {{data.codCost | number:".2"}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Shipping Fee</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="data.shippingFee" (change)="SUMTotal()">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Additional Cost</td>
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="data.additionalCost" (change)="SUMTotal()">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-center"></td>
+        <td class="text-right">Grand Total (THB)</td>
+        <td class="text-center">
+          {{data.grandTotal | number:".2"}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+<div class="container  table-responsive">
+  <div class="head-form col-12">Payment Method</div>
+  <table style="margin-top:10px;" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <td class="text-center">
+          <div>
+            Payment Type
+          </div>
+        </td>
+        <td class="text-center">
+          <div>
+            Payment Ref No.
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div>
+            Amount
+          </div>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-center">
+          <select class="form-control" [ngClass]="{'is-invalid': err.paymentType}" disabled name="paymentType"
+            [(ngModel)]="data.paymentType">
+            <option disabled>Please Select</option>
+            <option>BANK TRANSFER</option>
+            <option>CASH</option>
+            <option>CONSIGNMENT</option>
+            <option>CREDIT CARD</option>
+            <option>COD</option>
+            <option>CHEQUE</option>
+          </select>
+        </td>
+
+        <td class="text-center">
+          <input class="text-center" type=number [(ngModel)]="amount" disabled>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-right">Total Order</td>
+        <td class="text-center">
+          {{data.grandTotal | number:".2"}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-right">Paid Amount</td>
+        <td class="text-center">
+          {{amount | number:".2"}}
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center"></td>
+        <td class="text-right">Different</td>
+        <td class="text-center">
+          {{different | number:".2"}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="margin-top col-12 text-center margin-bottom">
+    <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-1">Save</button>
+    <button type="button" (click)="cancle()" class="btn btn-danger bt-style col-sm-1">Cancle</button>
+  </div>
+</div>

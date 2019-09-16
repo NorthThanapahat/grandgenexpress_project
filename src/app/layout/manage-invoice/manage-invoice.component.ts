@@ -5,6 +5,10 @@ import { UserDetails } from 'src/app/model/response/user_detail';
 import { ConfigApi } from 'src/app/shared/services/config';
 import { UserManageMent, UserData } from 'src/app/model/response/user_manage';
 import { inquiryOrder } from 'src/app/model/response/inquiryOrder';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { ReportDataComponent } from 'src/app/report-data/report-data.component';
+import { Router } from '@angular/router';
+import { EditInvoiceComponent } from 'src/app/modal/edit-invoice/edit-invoice.component';
 
 @Component({
   selector: 'app-manage-invoice',
@@ -20,7 +24,9 @@ export class ManageInvoiceComponent implements OnInit {
 
   userRef: string;
   constructor(
+    private dialog: MatDialog,
     public weProvider: WeDataProvider,
+    public router: Router,
     public api: ApiProvider) {
 
 
@@ -44,6 +50,24 @@ export class ManageInvoiceComponent implements OnInit {
       username: value
     }
   this.GetInvoice(data);
+  }
+  Print(item) {
+    this.dialog.open(ReportDataComponent, {
+      width: "100%",
+      height: "100%",
+      panelClass: "modal-popup",
+      data: item
+    });
+   
+  }
+  Edit(item){
+    
+    this.dialog.open(EditInvoiceComponent, {
+      width: "80%",
+      height: "80%",
+      panelClass: "modal-normal",
+      data: item
+    });
   }
   GetInvoice(data){
     this.api.SendRequestApi(ConfigApi.InquiryOrder_url, data).then((res: any) => {

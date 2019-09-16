@@ -1,189 +1,197 @@
 /* You can add global styles to this file, and also import other style files */
-@import "bootstrap/bootstrap";
-@import "spinner";
-@import "utils";
-@import "rtl";
-@import "responsive";
-@import "../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import 'bootstrap/bootstrap';
+@import 'spinner';
+@import 'utils';
+@import 'rtl';
+@import 'responsive';
+@import '../../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
 @media print {
-    .breadcrumb {
-        display: none !important;
-    }
+  .breadcrumb {
+    display: none !important;
+  }
 }
-app-root{
-    width:100%;
-    height: 100%;
+app-root {
+  width: 100%;
+  height: 100%;
 }
-app-login{
-    width:100%;
-    height: 100%;
-    background: #055A79;
+app-login {
+  width: 100%;
+  height: 100%;
+  background: #055a79;
 }
-.table .thead-dark th{
-    background:#055A79;
+.table .thead-dark th {
+  background: #055a79;
 }
-body,html{
-    width:100%;
-    height:100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
+body,
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
-.full-screen{
-    width:60%;
-    height:60%;
+.full-screen {
+  width: 60%;
+  height: 60%;
 }
-.bg-white{
-    background:white;
+.bg-white {
+  background: white;
 }
-.img-logo{
-    width:100px;
-    height: 100%;
+.img-logo {
+  width: 100px;
+  height: 100%;
 }
-.cdk-overlay-pane{
-
+.cdk-overlay-pane {
 }
-.btn-link{
-    cursor: pointer;
+.btn-link {
+  cursor: pointer;
 }
 // .mat-dialog-container{
 //     background: none;
 // }
-.relative{
-    position: relative;
+.relative {
+  position: relative;
 }
-.ab{
-    position: absolute;
+.ab {
+  position: absolute;
 }
-.top-right{
-    top:10px;
-    right: 10px;
+.top-right {
+  top: 10px;
+  right: 10px;
 }
 .modal-popup {
-    background: #fff !important;
-    max-width: 100vw !important;
-    width: 100vw !important;
-   padding: 0;
+  background: #fff !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  padding: 0;
 }
-.mat-dialog-container{
-   padding: 0 !important; 
+.modal-normal{
+  background: #fff !important;
 }
-.popup-modal{
-    padding: 10px;
+.mat-dialog-container {
+  padding: 0 !important;
 }
-.text-title-item{
-    margin-left: 15px; 
+.popup-modal {
+  padding: 10px;
+}
+.text-title-item {
+  margin-left: 15px;
+  font-size: 25px;
+}
+body {
+  height: 100%;
+  display: inline-block;
+  background: #fff;
+}
+.min-width-20 {
+  min-width: 200px;
+}
+.border {
+  border: 1px solid #333;
+}
+// padding margin
+.padding {
+  padding: 10px;
+}
+
+.padding-20 {
+  padding: 20px;
+}
+.padding-left {
+  padding-left: 10px;
+}
+.padding-left-15 {
+  padding-left: 15px;
+}
+.padding-left-35 {
+  padding-left: 35px;
+}
+.font-size-15 {
+  font-size: 15px;
+}
+.font-size-20 {
+  font-size: 20px;
+}
+.font-size-25 {
+  font-size: 25px;
+}
+@media print {
+  .hidePrint {
+    display: none !important;
+  }
+}
+app-report {
+  width: 100%;
+  height: 100%;
+  background: #333;
+}
+app-report-data {
+  width: 100%;
+  height: 100%;
+}
+
+.link {
+  cursor: pointer;
+}
+.margin-left {
+  margin-left: 10px;
+}
+.error-input {
+  border: 1px solid red !important;
+}
+.img-paid {
+  position: fixed;
+  z-index: 999;
+  opacity: 0.7;
+  width: 300px;
+  bottom: 20px;
+  left: 20%;
+}
+.font-35 {
+  font-size: 35px;
+}
+.bt-style {
+  font-size: 18px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.margin-top {
+  margin-top: 10px;
+}
+.margin-top {
+  margin-top: 10px;
+}
+.margin-right {
+  margin-right: 10px;
+}
+
+.margin-left {
+  margin-left: 10px;
+}
+.head-form {
+  font-size: 25px;
+  background: rgb(4, 63, 85);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: rgb(233, 233, 233);
+}
+thead > tr > td {
+  background: rgb(4, 63, 85);
+  color: #fff;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media only screen and (max-width: 360px) {
+  .margin-top-mobile {
+    margin-top: 10px;
+  }
+  .font-35 {
     font-size: 25px;
-}
-body{
-    height:100%;
-    display: inline-block;
-    background:#fff;
-}
-.min-width-20{
-    min-width: 200px;
-}
-.border{
-    border: 1px solid #333;
-}
-// padding margin 
-.padding{
-    padding:10px;
-}
-
-.padding-20{
-    padding:20px;
-}
-.padding-left{
-    padding-left: 10px;
-}
-.padding-left-15{
-    padding-left: 15px;
-}
-.padding-left-35{
-    padding-left: 35px;
-}
-.font-size-15{
-    font-size: 15px;
-}
-.font-size-20{
-    font-size: 20px;
-}
-.font-size-25{
-    font-size:25px;
-}
-app-report{
-    width:100%;
-    height: 100%;
-    background:#333;
-}
-app-report-data{
-    width:100%;
-    height: 100%;
-}
-
-.link{
-    cursor: pointer;
-}
-.margin-left{
-    margin-left:10px;
-}
-.error-input{
-    border: 1px solid red !important;
-}
-.img-paid{
-    position: fixed;
-    z-index: 999;
-    opacity: .7;
-    width: 300px;
-    bottom: 20px;
-    left: 10px;
-}
-.font-35{
-    font-size: 35px;
-}
-.bt-style{
-    font-size: 18px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-.margin-top{
-    margin-top:10px;
-}
-.margin-top{
-    margin-top:10px;
-}
-.margin-right{
-    margin-right: 10px;
-}
-
-.margin-left{
-    margin-left: 10px;
-}
-.head-form{
-    font-size: 25px;
-    background:rgb(4, 63, 85);
-    padding: 15px;
-    margin-bottom: 15px;
-    border-top-left-radius:10px;
-    border-top-right-radius: 10px;
-    color: rgb(233, 233, 233);
-}
-thead>tr>td{
-    background:rgb(4, 63, 85);
-    color:#fff;
-}
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-@media only screen and (max-width:360px){
-    .margin-top-mobile{
-        margin-top:10px;
-    }
-    .font-35{
-        font-size: 25px;
-    }
+  }
 }
