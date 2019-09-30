@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ApiProvider } from 'src/app/shared/services/api';
-import { ConfigApi } from 'dist/app/shared/services/config';
 import { inquiryOrder } from 'src/app/model/response/inquiryOrder';
+import { ConfigApi } from 'src/app/shared/services/config';
 
 @Component({
   selector: 'app-edit-invoice',

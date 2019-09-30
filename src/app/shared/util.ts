@@ -21,10 +21,10 @@ export class UtilProvider {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.maxWidth = "70%";
+    dialogConfig.width = "60%";
     dialogConfig.panelClass = "popup-modal"
     dialogConfig.data = { title: title, text: content};
 
-    this.dialog.open(AlertMessageComponent, dialogConfig);
+   return this.dialog.open(AlertMessageComponent, dialogConfig);
   }
 }

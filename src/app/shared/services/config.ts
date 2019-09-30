@@ -8,6 +8,7 @@ export class ConfigApi{
     public static createUser_url = ConfigApi.API_URL+"createUser";
     public static createProduct_url = ConfigApi.API_URL+"CreateProduct";
     public static editProduct_url = ConfigApi.API_URL+"EditProduct";
+    public static editInvoice_url = ConfigApi.API_URL+"EditInvoice";
     public static deleteProduct_url = ConfigApi.API_URL+"DeleteProduct";
     public static productInquiry_url = ConfigApi.API_URL+"InquiryProduct";
     public static CreateCustomer_url = ConfigApi.API_URL+"CreateCustomer";

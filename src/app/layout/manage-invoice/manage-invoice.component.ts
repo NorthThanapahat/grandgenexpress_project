@@ -9,6 +9,9 @@ import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ReportDataComponent } from 'src/app/report-data/report-data.component';
 import { Router } from '@angular/router';
 import { EditInvoiceComponent } from 'src/app/modal/edit-invoice/edit-invoice.component';
+import { AlertMessageComponent } from 'src/app/alert-message/alert-message.component';
+import { AlertConfirmComponent } from 'src/app/modal/alert-confirm/alert-confirm.component';
+import { UtilProvider } from 'src/app/shared/util';
 
 @Component({
   selector: 'app-manage-invoice',
@@ -20,12 +23,15 @@ export class ManageInvoiceComponent implements OnInit {
   userManage: UserManageMent;
   productofUser: Array<UserData> = [];
   inquiryOrder: inquiryOrder;
+  order: any;
   statusInvoice: string;
   userSelect: string;
   userRef: string;
+  saveData:Array<any>;
   constructor(
     private dialog: MatDialog,
     public weProvider: WeDataProvider,
+    private utilProvider: UtilProvider,
     public router: Router,
     public api: ApiProvider) {
 
@@ -33,6 +39,7 @@ export class ManageInvoiceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.saveData = [];
     this.userDetail = this.weProvider.GetUserDetail();
     if (this.userDetail.ResponseData.userRole == "admin") {
       let data = {
@@ -43,7 +50,8 @@ export class ManageInvoiceComponent implements OnInit {
     }
   }
   StatusInvoice(value, item, i) {
-    this.inquiryOrder.ResponseData.data[i].status = value;
+    this.saveData.push(item);
+    console.log(this.saveData);
   }
   UserOption(value) {
     this.userSelect = value;
@@ -51,6 +59,16 @@ export class ManageInvoiceComponent implements OnInit {
       username: value
     }
     this.GetInvoice(data);
+  }
+
+  Filter(value) {
+    console.log(value);
+    this.order = this.filterOrders(value);
+  }
+  filterOrders(value) {
+    return this.inquiryOrder.ResponseData.data.filter((item) => {
+      return item.customerRefNo.toLowerCase().trim().indexOf(value.toLowerCase().trim()) > -1;
+    })
   }
   Print(item) {
     this.dialog.open(ReportDataComponent, {
@@ -78,36 +96,88 @@ export class ManageInvoiceComponent implements OnInit {
         }
         this.GetInvoice(data);
       } else {
-       
+
       }
       console.log('The dialog was closed');
     });
   }
+  Delete(item) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "70%";
+    dialogConfig.maxWidth = "70%";
+    dialogConfig.panelClass = "popup-modal"
+    dialogConfig.data = { title: "Warning", text: "Are you sure you want to delete this Invoice ?" };
+
+    const dialogRef = this.dialog.open(AlertConfirmComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result === 'OK') {
+        let data = {
+          username: this.userRef,
+          orderNo: item.orderNo,
+          status: 'Cancelled order',
+          orderDetail: {
+            order: item.order,
+            grandTotal: item.grandTotal
+          }
+
+        }
+        this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
+          if (res.ResponseCode == "Success") {
+            window.location.reload();
+          }
+        });
+      }
+      console.log('The dialog was closed');
+    });
+
+  }
   GetInvoice(data) {
     this.api.SendRequestApi(ConfigApi.InquiryOrder_url, data).then((res: any) => {
       this.inquiryOrder = <inquiryOrder>res;
+      this.order = res.ResponseData.data;
 
       console.log(this.inquiryOrder);
     });
   }
-  save() {
+  async save() {
 
-    for (let i in this.inquiryOrder.ResponseData.data) {
+    for (let i in this.saveData) {
       // let i = 0;
-      console.log(this.inquiryOrder.ResponseData.data[i]);
+      console.log(this.saveData[i]);
       let data = {
         username: this.userRef,
-        orderNo: this.inquiryOrder.ResponseData.data[i].orderNo,
-        status: this.inquiryOrder.ResponseData.data[i].status,
+        orderNo: this.saveData[i].orderNo,
+        status: this.saveData[i].status,
         orderDetail: {
-          order: this.inquiryOrder.ResponseData.data[i].order,
-          grandTotal: this.inquiryOrder.ResponseData.data[i].grandTotal
+          order: this.saveData[i].order,
+          grandTotal: this.saveData[i].grandTotal
         }
-
       }
-      this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
-        if (res.ResponseCode == "Success") {
-          window.location.reload();
+      let error = false;
+      console.log(data);
+      // if (Number.parseInt(i) == this.saveData.length - 1) {
+      //   if (!error) {
+      //     let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
+      //     dialogRef.afterClosed().subscribe(result => {
+      //       window.location.reload();
+      //     });
+      //   }
+      // }
+      await this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
+        if (res.ResponseCode == "Error") {
+          error = true;
+        }
+        if (Number.parseInt(i) == this.saveData.length - 1) {
+          if (!error) {
+            let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
+            dialogRef.afterClosed().subscribe(result => {
+              window.location.reload();
+            });
+          }
         }
       });
     }

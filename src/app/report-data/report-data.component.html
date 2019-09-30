@@ -6,21 +6,31 @@
                 <img class="img-paid" src="../../assets/images/paid.png" alt="">
         </div>
         <div class="w-100 padding">
-                <div class="col-sm-8 offset-sm-2 col-12 padding-20 border">
-                        <div class="text-right font-35">
-                                <b>SHOP : {{data.user}}</b>
+                <div class="col-sm-8 offset-sm-2 col-12 padding-20 border float-left">
+                        <div class="w-100">
+                                <div class="col-6 float-left">
+                                        <img class="col-12 col-sm-10" src="../../assets/images/thx1.png" alt="">
+                                </div>
+                                <div class="col-6  float-left">
+                                        <div class="text-right font-25">
+                                                <b>SHOP : {{data.user}}</b>
+                                        </div>
+                                        <div class="text-right">
+                                                <div>
+                                                        <b>Date:</b> {{data.showdate}}
+                                                </div>
+                                                <div>
+                                                        <b>Receipt No:</b> {{data.orderNo}}
+                                                </div>
+                                                <div>
+                                                        <b>Ref No./CB No.:</b> {{data.customerRefNo}}
+                                                </div>
+                                        </div>
+                                </div>
+
                         </div>
-                        <div class="text-right">
-                                <div>
-                                        <b>Date:</b> {{data.showdate}}
-                                </div>
-                                <div>
-                                        <b>Receipt No:</b> {{data.orderNo}}
-                                </div>
-                                <div>
-                                        <b>Ref No./CB No.:</b> {{data.customerRefNo}}
-                                </div>
-                        </div>
+
+
                         <div class="margin-top">
                                 <div class="float-left">Sold To</div>
                                 <div class="float-left margin-left text-left">
@@ -68,8 +78,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr *ngIf="data.order.length == 0">
-                                                        <td class="text-center text-danger font-size-20" colspan="5">ไม่มีข้อมูลสินค้า</td>
-                                                        
+                                                        <td class="text-center text-danger font-size-20" colspan="5">
+                                                                ไม่มีข้อมูลสินค้า</td>
+
                                                 </tr>
                                                 <tr *ngFor="let item of data.order;let i = index;">
                                                         <td>{{i+1}}</td>
@@ -141,12 +152,17 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td><b>Total</b></td>
-                                                        <td *ngIf="data.status == 'Paid'">{{data.grandTotal | number:'.2'}}</td>
-                                                        <td *ngIf="data.status != 'Paid'">{{data.totalCharge | number:'.2'}}</td>
+                                                        <td *ngIf="data.status == 'Paid'">
+                                                                {{data.grandTotal | number:'.2'}}</td>
+                                                        <td *ngIf="data.status != 'Paid'">
+                                                                {{data.totalCharge | number:'.2'}}</td>
                                                 </tr>
                                         </tbody>
                                 </table>
                         </div>
                 </div>
+        </div>
+        <div class="col-12 text-center padding">
+                <img src="../../assets/images/thx2.png" class="col-6 col-sm-3" alt="">
         </div>
 </div>

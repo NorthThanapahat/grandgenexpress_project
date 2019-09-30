@@ -6,25 +6,32 @@
         <option *ngFor="let item of productofUser" [value]="item.username">{{item.username}}</option>
       </select>
     </div>
+    <div class="col-sm-5 search">
+      <span>
+        <i class="fa fa-search margin-right" aria-hidden="true"></i>
+      </span>
+      <input type="text"  placeholder="Search RefNo"
+        (keyup)="Filter($event.target.value)">
+    </div>
   </div>
-  <div class="container">
+  <div class="w-90 margin-auto">
     <div class="row table-responsive">
       <table class="table">
         <thead class="thead-dark">
           <tr class="col">
-            <th scope="col">#</th>
-            <th scope="col">Invoice No.</th>
-            <th scope="col">Receipt Info</th>
-            <th scope="col">Customer Phone Number</th>
-            <th scope="col">Ref No. / CB No.</th>
-            <th scope="col">sale date</th>
-            <th scope="col">Submitted By</th>
-            <th scope="col">Status</th>
-            <th scope="col">Action</th>
+            <th class="text-center" scope="col">#</th>
+            <th class="text-center" scope="col">Invoice No.</th>
+            <th class="text-center" scope="col">Receipt Info</th>
+            <th class="text-center" scope="col">Customer Phone Number</th>
+            <th class="text-center" scope="col">Ref No. / CB No.</th>
+            <th class="text-center" scope="col">sale date</th>
+            <th class="text-center" scope="col">Submitted By</th>
+            <th class="text-center" scope="col">Status</th>
+            <th class="text-center" colspan="2" scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of inquiryOrder?.ResponseData.data ; let i = index;">
+          <tr *ngFor="let item of order ; let i = index;">
             <th scope="row">{{i+1}}</th>
             <td class="btn-link" (click)="Print(item)">{{item.orderNo}}</td>
             <td>{{item.customerName}} <br>{{item.customerAddress}}</td>
@@ -36,19 +43,18 @@
               <select class="form-control min-width-20" name="user" [(ngModel)]="item.status"
                 (change)="StatusInvoice($event.target.value,item,i)">
                 <option>Waiting for shipment</option>
-                <option>Shipped</option> 
+                <option>Shipped</option>
                 <option>Delivered</option>
                 <option>Paid</option>
-                <option>Cancelled order</option>
               </select>
             </td>
-            <td (click)="Edit(item)"><button class="btn btn-danger bt-style">Edit</button></td>
-
+            <td><button (click)="Edit(item)" class="btn btn-warning text-white bt-style no-margin">Edit</button></td>
+            <td><button (click)="Delete(item)" class="btn btn-danger bt-style no-margin">Delete</button></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="margin-top col-12 text-right">
-        <button type="button" (click)="save()" class="btn btn-success bt-style col-sm-1">Save</button>
-      </div>
+      <button [disabled]="saveData.length == 0" type="button" (click)="save()" class="btn btn-success bt-style col-sm-1">Save</button>
+    </div>
   </div>
