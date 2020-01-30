@@ -43,7 +43,7 @@
     "nodemon": "^1.18.10",
     "oauth2-server": "^3.0.1",
     "rxjs": "^6.3.3",
-    "yarn": "1.12.1",
+    "yarn": "1.17.3",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
