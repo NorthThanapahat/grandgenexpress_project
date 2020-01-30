@@ -88,7 +88,57 @@
                   GetResAuth(res, result, fields);
             });
       });
+      app.post('/DeleteInvoice',(req,res)=>{
+         var orderNo = req.body.orderNo;
+         
+         ConnectDB();
+         db.query("DELETE FROM payment WHERE orderNo = '"+orderNo+"'",function(err,resultPayment,fields){
+               if (err) throw err;
 
+               if (resultPayment == [] || resultPayment == null || resultPayment == 'undefined') {
+                  res.json({
+                        ResponseCode: "Error",
+                        ResponseMessage: "Error Delete order"
+                  });
+            } else {
+                  if (resultPayment.affectedRows > 0) {
+                        db.query("DELETE FROM order_total WHERE orderNo = '"+orderNo+"'",function(err,resultOrderTotal,fields){
+                              if (err) throw err;
+
+                              if (resultOrderTotal == [] || resultOrderTotal == null || resultOrderTotal == 'undefined') {
+                                 res.json({
+                                       ResponseCode: "Error",
+                                       ResponseMessage: "Error Delete order"
+                                 });
+                                 
+                              }
+                              if (resultOrderTotal.affectedRows > 0) {
+                                    db.query("DELETE FROM `order` WHERE orderNo = '"+orderNo+"'",function(err,resultOrder,fields){
+                                          if (err) throw err;
+            
+                                          if (resultOrder == [] || resultOrder == null || resultOrder == 'undefined') {
+                                             res.json({
+                                                   ResponseCode: "Error",
+                                                   ResponseMessage: "Error Delete order"
+                                             });
+                                    
+                                          }
+                                          if (resultOrder.affectedRows > 0) {
+                                                res.json({
+                                                      ResponseCode: "Success",
+                                                      ResponseData: { orderNo }
+                                                });
+                                          }
+      
+            
+                                    })
+                              }
+
+                        })
+                  }
+            }
+         })
+      });
       app.post('/userInfomation', (req, res) => {
             // console.log('req.token ===>',req.token);
             // jwt.verify(req.token, 'secretkey', (err, resultData) => {
@@ -694,42 +744,108 @@
                   }
             });
       });
+      function DeleteUser(username, res) {
+            db.query("DELETE FROM `user` WHERE `user`.username = '" + username + "'", function (err, result, fields) {
+                  if (err)
+                        throw err;
+                  if (result == [] || result == null || result == 'undefined') {
+                        res.json({
+                              ResponseCode: "Error",
+                              ResponseMessage: "Error Create Product"
+                        });
+                  }
+                  else {
+                        if (result.affectedRows > 0) {
+                              db.query("DELETE FROM user_details WHERE user_details.username = '" + username + "'", function (err, result, fields) {
+                                    if (err)
+                                          throw err;
+                                    if (result == [] || result == null || result == 'undefined') {
+                                          res.json({
+                                                ResponseCode: "Error",
+                                                ResponseMessage: "Error Create Product"
+                                          });
+                                    }
+                                    else {
+                                          if (result.affectedRows > 0) {
+                                                res.json({
+                                                      ResponseCode: "Success",
+                                                      ResponseMessage: username + " is Deleted"
+                                                });
+                                          }
+                                    }
+                              });
+                        }
+                  }
+            });
+      }
       app.post('/DeleteUser', (req, res) => {
             var username = req.body.username;
             var userRole = '';
             ConnectDB();
-            db.query("SELECT * FROM user_details WHERE username = '" + username + "'", function (err, result, fields) {
-                  if (err) throw err;
-                  userRole = result[0].userRole;
-                  if (userRole == 'admin') {
-                        DeleteUser(username, res);
-                  } else if (userRole == "shop") {
-                        db.query("SELECT * FROM payment WHERE user = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
-                              if (err) throw err;
-                              if (result.length > 0) {
-                                    res.json({
-                                          ResponseCode: "Error",
-                                          ResponseMessage: "Cannot Delete " + username + " because this user has invoice that isn't Complete"
-                                    });
-                              } else if (result.length == 0) {
-                                    DeleteUser(username, res);
-                              }
-                        });
-                  } else if (userRole == "cashier") {
-                        db.query("SELECT * FROM payment WHERE createBy = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
-                              if (err) throw err;
-                              if (result.length > 0) {
-                                    res.json({
-                                          ResponseCode: "Error",
-                                          ResponseMessage: "Cannot Delete " + username + " because this user has invoice that isn't Complete"
-                                    });
-                              } else if (result.length == 0) {
-                                    DeleteUser(username, res);
-                              }
-                        });
-                  }
+            
+            // DeleteUser(username, res);
+            db.query("DELETE FROM `user` WHERE `username` = '" + username + "'", function (err, result, fields) {
+                  if (err)
+                        throw err;
 
+                        if (result.affectedRows > 0) {
+                              db.query("DELETE FROM `user_details` WHERE `username` = '" + username + "'", function (err, result, fields) {
+                                    if (err)
+                                          throw err;
+                  
+                                          if (result.affectedRows > 0) { 
+                                                res.json({
+                                                      ResponseCode: "Success",
+                                                      ResponseMessage: username + " is Deleted"
+                                                });
+                                          }else{
+                                                res.json({
+                                                      ResponseCode: "Error",
+                                                      ResponseMessage: username + "Cann't Delete (user_details) !!"
+                                                });
+                                          }
+                              });
+                        }else{
+                              res.json({
+                                    ResponseCode: "Error",
+                                    ResponseMessage: username + "Cann't Delete (user) !!"
+                              });
+                        }
+                       
+                  
             });
+            // db.query("SELECT * FROM user_details WHERE username = '" + username + "'", function (err, result, fields) {
+            //       if (err) throw err;
+            //       userRole = result[0].userRole;
+                  
+            //       // if (userRole == 'admin') {
+            //       //       DeleteUser(username, res);
+            //       // } else if (userRole == "shop") {
+            //       //       db.query("SELECT * FROM payment WHERE user = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
+            //       //             if (err) throw err;
+            //       //             if (result.length > 0) {
+            //       //                   db.query("DELETE FROM payment WHERE user = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
+            //       //                         if (err) throw err;
+            //       //                   });
+
+            //       //             } 
+            //       //                   DeleteUser(username, res);
+                              
+            //       //       });
+            //       // } else if (userRole == "cashier") {
+            //       //       db.query("SELECT * FROM payment WHERE createBy = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
+            //       //             if (err) throw err;
+            //       //             if (result.length > 0) {
+            //       //                   db.query("DELETE FROM payment WHERE createBy = '" + username + "' AND status != 'Paid'", function (err, result, fields) {
+            //       //                         if (err) throw err;
+            //       //                   });
+
+            //       //             }
+            //       //                   DeleteUser(username, res);
+            //       //       });
+            //       // }
+
+            // });
       });
       app.post('/DeleteProduct', (req, res) => {
             var productID = req.body.productID;
@@ -927,38 +1043,5 @@
             });
       });
 
-      function DeleteUser(username, res) {
-            db.query("DELETE FROM user WHERE username = '" + username + "'", function (err, result, fields) {
-                  if (err)
-                        throw err;
-                  if (result == [] || result == null || result == 'undefined') {
-                        res.json({
-                              ResponseCode: "Error",
-                              ResponseMessage: "Error Create Product"
-                        });
-                  }
-                  else {
-                        if (result.affectedRows > 0) {
-                              db.query("DELETE FROM user_details WHERE username = '" + username + "'", function (err, result, fields) {
-                                    if (err)
-                                          throw err;
-                                    if (result == [] || result == null || result == 'undefined') {
-                                          res.json({
-                                                ResponseCode: "Error",
-                                                ResponseMessage: "Error Create Product"
-                                          });
-                                    }
-                                    else {
-                                          if (result.affectedRows > 0) {
-                                                res.json({
-                                                      ResponseCode: "Success",
-                                                      ResponseMessage: username + " is Deleted"
-                                                });
-                                          }
-                                    }
-                              });
-                        }
-                  }
-            });
-      }
+      
 

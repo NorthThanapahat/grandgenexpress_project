@@ -17,6 +17,8 @@ export class ConfigApi{
     public static OrderDetail_url = ConfigApi.API_URL+"orderDetail";
     public static InquiryOrder_url = ConfigApi.API_URL+"InquiryOrder";
     public static UpdateStatusInvoice_url = ConfigApi.API_URL+"UpdateStatusInvoice";
+    public static DeleteInvoice_url = ConfigApi.API_URL+"DeleteInvoice";
+
     public static GetHistory_url = ConfigApi.API_URL+"GetHistory";
     public static Report_url = ConfigApi.API_URL+"Report";
     public static ResetPassword_url = ConfigApi.API_URL+"ResetPassword";

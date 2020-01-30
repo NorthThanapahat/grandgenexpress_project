@@ -15,6 +15,10 @@ export class ReportDataComponent implements OnInit {
     for(let orderItem of data.order){
       orderItem.total = (Number.parseFloat(orderItem.itemPrice) * orderItem.quantity).toString();
     }
+    if(data.status != 'Paid'){
+      data.balanceComfirm = (Number.parseFloat(data.totalCharge) - Number.parseFloat(data.discount)).toString();
+      console.log(data);
+    }
   }
 
   ngOnInit() {

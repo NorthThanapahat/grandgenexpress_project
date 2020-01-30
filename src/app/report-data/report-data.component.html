@@ -118,19 +118,13 @@
                                                         <td>{{data.discount | number:'.2'}}</td>
                                                 </tr>
 
-                                                <tr *ngIf="data.status == 'Paid'">
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>Additional Cost</td>
-                                                        <td>{{data.additionalCost | number:'.2'}}</td>
-                                                </tr>
+                                               
                                                 <tr
                                                         *ngIf="(data.codCost != '0' || data.codCost != undefined || data.codCost != '' || data.codCost != null) && data.status == 'Paid'">
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>COD</td>
+                                                        <td>COD & Service</td>
                                                         <td>{{data.codCost | number:'.2'}}</td>
                                                 </tr>
                                                 <tr *ngIf="data.status == 'Paid'">
@@ -144,7 +138,7 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>Additional Cost</td>
+                                                        <td>Admin Fee</td>
                                                         <td>{{data.additionalCost | number:'.2'}}</td>
                                                 </tr>
                                                 <tr>
@@ -155,7 +149,7 @@
                                                         <td *ngIf="data.status == 'Paid'">
                                                                 {{data.grandTotal | number:'.2'}}</td>
                                                         <td *ngIf="data.status != 'Paid'">
-                                                                {{data.totalCharge | number:'.2'}}</td>
+                                                                {{data.balanceComfirm | number:'.2'}}</td>
                                                 </tr>
                                         </tbody>
                                 </table>

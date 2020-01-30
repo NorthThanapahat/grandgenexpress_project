@@ -27,7 +27,7 @@ export class ManageInvoiceComponent implements OnInit {
   statusInvoice: string;
   userSelect: string;
   userRef: string;
-  saveData:Array<any>;
+  saveData: Array<any>;
   constructor(
     private dialog: MatDialog,
     public weProvider: WeDataProvider,
@@ -112,23 +112,24 @@ export class ManageInvoiceComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AlertConfirmComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async result => {
       console.log(result);
       if (result === 'OK') {
         let data = {
-          username: this.userRef,
-          orderNo: item.orderNo,
-          status: 'Cancelled order',
-          orderDetail: {
-            order: item.order,
-            grandTotal: item.grandTotal
+          orderNo: item.orderNo
+        }
+        await this.api.SendRequestApi(ConfigApi.DeleteInvoice_url, data).then((res: any) => {
+          let dialogRef = null;
+          if (res.ResponseCode == "Error") {
+           dialogRef = this.utilProvider.AlertMessage("Error", "Delete Unsuccessful");
+          } else {
+           dialogRef = this.utilProvider.AlertMessage("Complete", "Delete Successful");
+
           }
 
-        }
-        this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
-          if (res.ResponseCode == "Success") {
+          dialogRef.afterClosed().subscribe(result => {
             window.location.reload();
-          }
+          });
         });
       }
       console.log('The dialog was closed');
@@ -144,42 +145,67 @@ export class ManageInvoiceComponent implements OnInit {
     });
   }
   async save() {
-
+    let error = false;
     for (let i in this.saveData) {
-      // let i = 0;
-      console.log(this.saveData[i]);
-      let data = {
-        username: this.userRef,
-        orderNo: this.saveData[i].orderNo,
-        status: this.saveData[i].status,
-        orderDetail: {
-          order: this.saveData[i].order,
-          grandTotal: this.saveData[i].grandTotal
+      if (this.saveData[i].status === "Cancle Order") {
+        let data = {
+          orderNo: this.saveData[i].orderNo
         }
-      }
-      let error = false;
-      console.log(data);
-      // if (Number.parseInt(i) == this.saveData.length - 1) {
-      //   if (!error) {
-      //     let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
-      //     dialogRef.afterClosed().subscribe(result => {
-      //       window.location.reload();
-      //     });
-      //   }
-      // }
-      await this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
-        if (res.ResponseCode == "Error") {
-          error = true;
-        }
-        if (Number.parseInt(i) == this.saveData.length - 1) {
-          if (!error) {
-            let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
-            dialogRef.afterClosed().subscribe(result => {
-              window.location.reload();
-            });
+        await this.api.SendRequestApi(ConfigApi.DeleteInvoice_url, data).then((res: any) => {
+          if (res.ResponseCode == "Error") {
+            error = true;
+          }
+          if (Number.parseInt(i) == this.saveData.length - 1) {
+            if (!error) {
+              let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
+              dialogRef.afterClosed().subscribe(result => {
+                window.location.reload();
+              });
+            }else{
+              let dialogRef = this.utilProvider.AlertMessage("Error", "Update status Unsuccessful");
+              dialogRef.afterClosed().subscribe(result => {
+                window.location.reload();
+              });
+            }
+          }
+        });
+      } else {
+        // let i = 0;
+        console.log(this.saveData[i]);
+        let data = {
+          username: this.userRef,
+          orderNo: this.saveData[i].orderNo,
+          status: this.saveData[i].status,
+          orderDetail: {
+            order: this.saveData[i].order,
+            grandTotal: this.saveData[i].grandTotal
           }
         }
-      });
+
+        console.log(data);
+        // if (Number.parseInt(i) == this.saveData.length - 1) {
+        //   if (!error) {
+        //     let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
+        //     dialogRef.afterClosed().subscribe(result => {
+        //       window.location.reload();
+        //     });
+        //   }
+        // }
+        await this.api.SendRequestApi(ConfigApi.UpdateStatusInvoice_url, data).then((res: any) => {
+          if (res.ResponseCode == "Error") {
+            error = true;
+          }
+          if (Number.parseInt(i) == this.saveData.length - 1) {
+            if (!error) {
+              let dialogRef = this.utilProvider.AlertMessage("Complete", "Update status Successful");
+              dialogRef.afterClosed().subscribe(result => {
+                window.location.reload();
+              });
+            }
+          }
+        });
+      }
+
     }
 
   }

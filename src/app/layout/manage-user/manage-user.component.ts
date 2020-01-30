@@ -43,7 +43,7 @@ export class ManageUserComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.maxWidth = "70%";
+    dialogConfig.width = "70%";
     dialogConfig.panelClass = "popup-modal"
     dialogConfig.data = { title: "Delete", content: "Are you sure for Delete : " + username, username: username };
 
@@ -59,7 +59,7 @@ export class ManageUserComponent implements OnInit {
           if (res.ResponseCode == "Success") {
             window.location.reload();
           } else {
-            this.util.AlertMessage("Delete", "Cannot Delete User. Please contact admin!!!");
+            this.util.AlertMessage("Delete", res.ResponseMessage);
           }
         });
       }

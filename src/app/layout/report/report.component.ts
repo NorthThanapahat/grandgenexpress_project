@@ -37,6 +37,7 @@ export class ReportComponent implements OnInit {
   totalAmount: string;
   resultFilter: Array<any>;
   shopSelect: string;
+  totalAllAmount:number;
   constructor(
     private dialog: MatDialog,
     public router: Router,
@@ -137,8 +138,11 @@ export class ReportComponent implements OnInit {
             }
           }
         } else {
-
+          this.totalAllAmount = 0;
           this.resultFilter = res.ResponseData.data;
+          for(let item of this.resultFilter){
+            this.totalAllAmount += Number.parseFloat(item.grandTotal);
+          }
           if (this.shopSelect != 'All') {
             console.log(this.shopSelect)
             this.resultFilter = this.resultFilter.filter((item: any) => {
@@ -198,7 +202,9 @@ export class ReportComponent implements OnInit {
     if (value == 'All') {
       if (this.reportType == '1') {
         this.resultFilter = this.result.ResponseData.data;
-
+        for(let item of this.resultFilter){
+          this.totalAllAmount += Number.parseFloat(item.grandTotal);
+        }
       } else if (this.reportType == '2') {
         this.resultFilter = this.result.ResponseData.result;
       }
@@ -206,13 +212,17 @@ export class ReportComponent implements OnInit {
     else {
       if (this.reportType == '1') {
         this.resultFilter = this.result.ResponseData.data;
-
+        
       } else if (this.reportType == '2') {
         this.resultFilter = this.result.ResponseData.result;
       }
       this.resultFilter = this.resultFilter.filter((item: any) => {
         return item.customerOfUser.trim().indexOf(this.shopSelect.trim()) > -1;
       });
+      this.totalAllAmount = 0;
+      for(let item of this.resultFilter){
+        this.totalAllAmount += Number.parseFloat(item.grandTotal);
+      }
 
     }
     this.GroupSummary();

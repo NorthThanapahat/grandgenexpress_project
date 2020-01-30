@@ -105,6 +105,11 @@
           <td>{{item.createBy}}</td>
 
         </tr>
+        <tr>
+          <th colspan="3">รวมยอดขาย</th>
+          <td colspan="3">{{totalAllAmount |  number:'.2'}} บาท</td>
+
+        </tr>
         <tr *ngIf="resultFilter.length == 0">
           <td class="text-center" colspan="9">
             ไม่พบข้อมูล

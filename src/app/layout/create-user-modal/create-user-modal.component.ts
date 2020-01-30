@@ -4,6 +4,7 @@ import { ApiProvider } from 'src/app/shared/services/api';
 import { UserDetails } from 'src/app/model/response/user_detail';
 import { ConfigApi } from 'src/app/shared/services/config';
 import { UserManageMent, UserData } from 'src/app/model/response/user_manage';
+import { UtilProvider } from 'src/app/shared/util';
 
 @Component({
   selector: 'app-create-user-modal',
@@ -23,7 +24,12 @@ export class CreateUserModalComponent implements OnInit {
   userManage: UserManageMent;
   userRef: Array<UserData> = [];
   userRefSelect: string;
-  constructor(public api: ApiProvider, public router: Router) { }
+  err = {
+    firstname: false,
+    username: false,
+    password: false
+  }
+  constructor(public api: ApiProvider, public router: Router, private util: UtilProvider) { }
 
   ngOnInit() {
     this.userDetail = JSON.parse(localStorage.getItem('userDetail'));
@@ -42,13 +48,20 @@ export class CreateUserModalComponent implements OnInit {
   Validate() {
 
     if (this.password !== this.confirmPass) {
+      this.err.password = true;
       return false;
     }
     if (this.username === '' || this.username === null) {
+      this.err.username = true;
       return false;
     }
+    if (this.firstname === '' || this.firstname === null) {
+      this.err.firstname = true;
+      return false;
 
-    return true;
+    }
+    else
+      return true;
   }
   UserRefSelect(value) {
     console.log(value);
@@ -106,7 +119,7 @@ export class CreateUserModalComponent implements OnInit {
 
       this.CreateUser(data);
     } else {
-      console.log("not save")
+      this.util.AlertMessage("Warning !", "Please fill full on CreateUser Form !!");
     }
   }
 
